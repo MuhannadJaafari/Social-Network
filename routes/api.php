@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 //public routes
-Route::post('/register',[UserController::class,'store']);
-Route::post('/login',[LoginController::class,'login']);
+Route::post('/register',[AuthController::class,'register']);
+Route::post('/login',[AuthController::class,'login']);
 Route::get('/{user_id}',[UserController::class,'show']);
 Route::get('/{user_id}/profilePic',[UserController::class,'getProfilePic']);
 Route::get('/{user_id}/posts',[UserController::class,'getPosts']);
@@ -26,6 +27,9 @@ Route::get('{post_id}/comments',[PostController::class,'getComments']);
 Route::get('{post_id}/likes',[PostController::class,'getLikes']);
 Route::get('{post_id}/sharers',[PostController::class,'getSharers']);
 //protected routes
+
+Route::group(['middleware'=>['auth:sanctum']],function (){
+Route::post('/logout',[AuthController::class,'logout']);
 Route::delete('/deactivate',[UserController::class,'destroy']);
 Route::put('/update',[UserController::class,'destroy']);
 Route::post('/newPost',[PostControllr::class,'store']);
@@ -42,4 +46,4 @@ Route::get('/newsFeed',[PostController::class,'getNewsFeed']);
 Route::post('/{post}/viewed',[PostController::class,'viewPost']);//for newsFeed algo
 Route::put('/updateProfilePic',[PhotoController::class,'updateProfilePic']);
 Route::delete('/deleteProfilePic',[PhotoController::class,'deleteProfilePic']);
-
+});
