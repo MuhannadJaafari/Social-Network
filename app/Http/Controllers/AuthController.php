@@ -1,60 +1,38 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\User;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserAccountCreatingRequest;
+use App\Http\Requests\UserLogInRequest;
+use App\Models\User;
+use http\Env\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(UserAccountCreatingRequest $request)
     {
-        $fields=$request->validate([
-            'name'=>'required|string',
-            'email'=>'required|string|unique:users,email',
-            'password'=>'required|string|confirmed'
-        ]);
-        $user=User::create([
-            'name'=>$fields['name'],
-            'email'=>$fields['email'],
-            'password'=>bcrypt($fields['password'])
-        ]);
-        $token =$user->createToken('myapptoken')->plainTextToken;
-        $response = [
-            'user'=>$user,
-            'token'=>$token
-        ];
-        return response($response,201);
+
+        $user = User::create($request->all());
+        return response()->json(['token' => $user->createToken('API Token')->plainTextToken]);
     }
-    public function login(Request $request)
+
+    public function login(UserLogInRequest $request)
     {
-        $fields=$request->validate([
-            'email'=>'required|string',
-            'password'=>'required|string|confirmed'
-        ]);
-       //check email
-        $user =User::where('email',$fields['email'])->first();
-        //check password
-        if(!$user||!Hash::check($fields['password'],$user->password)){
-            return \response([
-                'message'=>'Bad creds'
-            ],401);
+
+        if (!Auth::attempt($request->only('email','password'))) {
+            return response()->json([
+                'message'=>'wrong credentials'
+            ]);
         }
-
-        $token =$user->createToken('myapptoken')->plainTextToken;
-        $response = [
-            'user'=>$user,
-            'token'=>$token
-        ];
-        return response($response,201);
+        return response()->json(['token' => auth()->user()->createToken('API Token')->plainTextToken]);
     }
 
-    public function logout(Request $request){
+    public function logout()
+    {
         auth()->user()->tokens()->delete();
         return [
-            'message'=>'Logged out'
+            'message' => 'Logged out'
         ];
     }
 }
