@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserAccountCreatingRequest;
 use App\Http\Requests\UserLogInRequest;
-use App\Models\User;
+use App\Models\Users\User;
 use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
 
