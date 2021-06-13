@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\HashtagController;
+use App\Http\Controllers\PhotoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,15 +38,14 @@ Route::group(['middleware'=>['auth:sanctum']],function (){
 Route::post('/logout',[AuthController::class,'logout']);
 Route::delete('/deactivate',[UserController::class,'destroy']);
 Route::put('/update',[UserController::class,'destroy']);
-Route::post('/newPost',[PostControllr::class,'store']);
-Route::put('/updatePost',[PostControllr::class,'update']);
+Route::post('/newPost',[PostController::class,'store']);
+Route::put('/updatePost',[PostController::class,'update']);
 Route::delete('/deletePost',[PostController::class,'destroy']);
-Route::post('/newComment',[CommnetController::class,'store']);
-Route::put('/updateComment',[CommnetController::class,'update']);
-Route::delete('/deleteComment',[CommnetController::class,'destroy']);
+Route::post('/newComment',[CommentController::class,'store']);
+Route::put('/updateComment',[CommentController::class,'update']);
+Route::delete('/deleteComment',[CommentController::class,'destroy']);
 Route::post('newHashtag',[HashtagController::class,'store']);
 Route::post('newLike',[LikeController::class,'store']);
-Route::put('updateLike',[LikeController::class,'update']);
 Route::delete('deleteLike',[LikeController::class,'destroy']);
 Route::get('/newsFeed',[PostController::class,'getNewsFeed']);
 Route::post('/{post}/viewed',[PostController::class,'viewPost']);//for newsFeed algo
