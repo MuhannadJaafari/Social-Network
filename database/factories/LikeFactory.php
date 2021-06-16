@@ -22,9 +22,9 @@ class LikeFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'=>'1',
+            'user_id'=>rand(1,5),
             'likeable_type'=>'App\Models\Post',
-            'likeable_id'=>'1'
+            'likeable_id'=>rand(1,10)
         ];
     }
 }

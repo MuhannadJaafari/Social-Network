@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Username extends Model
 {
     use HasFactory;
-    public function user() : BelongsTo{
-        return $this->belongsTo(User::class);
+    protected $fillable = ['name'];
+    public $timestamps = false;
+    public function useable(){
+        return $this->morphTo();
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Photo;
-use App\Models\Post;
+use App\Helper;
 use App\Models\Users\User;
+use App\Models\Users\Username;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -14,9 +14,10 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-        //
+
     }
 
     /**
@@ -32,7 +33,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -43,19 +44,27 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(User $user)
     {
-         $user= User::find($id);
-         return response()->json($user);
+        $address = $user->address()->first();
+        $user_page = [
+            'id'=>$user->id,
+            'name'=>$user->name,
+            //profile pic
+            //cover pic
+            'town'=>$address->town,
+            'city'=>$address->city,
+        ];
+        return response()->json([$user_page]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -66,8 +75,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -78,34 +87,25 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy( $id)
+    public function destroy($id)
     {
-       $user=User::find($id);
-       $user->delete();
+        $user = User::find($id);
+        $user->delete();
     }
-    public function getProfilePic($id)
-    {
-      //  $profile_pic= Photo::where('imageable_id',id)->where('imageable_type','profile_pic');
-        // if($profile_pic)return $profile_pic;
-    }
+
     public function getPosts($id)
     {
-        $user =User::find($id);
+        $user = User::find($id);
         return response()->json($user->post());
-
-
     }
+
     public function getFriends($id)
     {
-        $user=User::find($id);
-       return response()->json($user->relations());
+        $user = User::find($id);
+        return response()->json($user->relations());
     }
-    public function getPhotos($id)
-    {
-        $user=User::find($id);
-        return response()->json(['photo_url'=>$user->posts()->photos()->url()]);
-    }
+
 }

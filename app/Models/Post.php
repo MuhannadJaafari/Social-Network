@@ -12,26 +12,29 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Post extends Model
 {
     use HasFactory;
+
     public function postable(){
         return $this->morphTo();
     }
-//    public function photo() : HasMany{
-//        return $this->hasMany(Photo::class);
-//    }
-//    public function video() : HasMany{
-//        return $this->hasMany(Video::class);
-//    }
-    public function hashtag() : HasMany{
-        return $this->hasMany(Hashtag::class);
+    public function photos() {
+        return $this->morphMany(Photo::class,'photoable');
     }
-    public function text(){
-        return $this->morphOne(Text::class,'textable');
+    public function video() {
+        return $this->morphMany(Video::class,'videoable');
     }
-    public function like() {
+    public function hashtags(){
+        return $this->morphToMany(Hashtag::class,'hashtagable');
+        //we can add extra columns for pivot tabel
+        //$this->belongsToMany(Hashtag::class)->withPivot('active', 'created_by');
+        //the only pivot we have now is post_id,hashtag_id
+    }
+    public function likes() {
         return $this->morphMany(Like::class,'likeable');
     }
-    public function comment() :HasMany{
+    public function comments() :HasMany{
         return $this->hasMany(Comment::class);
     }
-
+    public function share(){
+        return $this->belongsToMany(Post::class,'share_posts','source_post_id','shared_post_id');
+    }
 }

@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Hashtag extends Model
+class PhotoType extends Model
 {
     use HasFactory;
-    public function posts(){
-        return $this->morphedByMany(Post::class,'hashtagable');
+    public function photo(){
+        return $this->belongsTo(Photo::class);
     }
 }

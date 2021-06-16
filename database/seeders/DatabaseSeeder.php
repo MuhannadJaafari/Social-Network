@@ -13,11 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        // Create 10 records of customers
+
         $this->call([
-           UserSeeder::class,
-            PostSeeder::class,
-            TextSeeder::class,
-            LikeSeeder::class
+            UserSeeder::class,
         ]);
     }
 }

@@ -1,8 +1,14 @@
 <?php
 
-use App\Models\Users\User;
+use App\Models\Conversation;
+use App\Models\Users\Address;
+use App\Models\Users\Username;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Schema;
+use App\Models\Post;
+use App\Models\Users\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,6 +21,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $user = User::first();
-
+    $username =  Username::where('name', '=', 'muhannad_99')->firstOrFail();
+    dd($username->useable()->first());
 });

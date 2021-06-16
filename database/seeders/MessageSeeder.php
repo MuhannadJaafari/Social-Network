@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Like;
 use Illuminate\Database\Seeder;
 
-class LikeSeeder extends Seeder
+class MessageSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,8 +13,6 @@ class LikeSeeder extends Seeder
      */
     public function run()
     {
-        Like::factory()->
-            count(20)->
-            create();
+        //
     }
 }

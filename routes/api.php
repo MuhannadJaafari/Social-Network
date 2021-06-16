@@ -24,7 +24,7 @@ use App\Http\Controllers\PhotoController;
 //public routes
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
-Route::get('/{user_id}',[UserController::class,'show']);
+Route::get('/{user}',[UserController::class,'show']);
 Route::get('/{user_id}/profilePic',[UserController::class,'getProfilePic']);
 Route::get('/{user_id}/posts',[UserController::class,'getPosts']);
 Route::get('/{user_id}/friends',[UserController::class,'getFriends']);
