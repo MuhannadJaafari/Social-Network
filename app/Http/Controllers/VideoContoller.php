@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Photo;
-use App\Models\Users\User;
+use App\Models\Video;
 use Illuminate\Http\Request;
 
-class PhotoController extends Controller
+class VideoContoller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,22 +36,19 @@ class PhotoController extends Controller
     public function store(Request $request)
     {
 
-        $photo =Photo::create($request->all());
-        $photo->save();
+        $video=Video::create($request->all());
+        $video->save();
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $photo =Photo::find($id);
-        return response()->json(['photoable_id'=>$photo->photoable_id,
-            'photoable_type'=>$photo->photoable_type,
-            'photo_url'=>$photo->url]);
+        //TODO
     }
 
     /**
@@ -86,15 +82,6 @@ class PhotoController extends Controller
      */
     public function destroy($id)
     {
-        $photo=Photo::find($id);
-        $photo->delete();
-    }
-    public function updateProfilePic(User $user,Photo $photo)
-    {
-        //TODO
-    }
-    public function deleteProfilePic(User $user,Photo $photo)
-    {
-        //TODO
+        //
     }
 }

@@ -38,7 +38,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
+        $user=User::create($request->all());
+        $user->save();
     }
 
     /**
@@ -69,7 +70,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user=User::find($id);
+        $this->authorize('isOwner',$user);
     }
 
     /**

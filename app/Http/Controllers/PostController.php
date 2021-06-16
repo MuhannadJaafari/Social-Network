@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\Text;
 use App\Models\Video;
 use http\Env\Response;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -40,8 +41,17 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-
+    {   $request=collect($request);
+        $post_info = $this->helper->filter($request,['user_id,postable_id,postable_type,text,photo_url,video_url']);
+        $post=Post::create($post_info['user_id,postable_id,postable_type,text']);
+        if($post_info['photo_url'])
+        {
+          //TODO
+        }
+        if($post_info['vider_url'])
+        {
+            //TODO
+        }
 
     }
 
@@ -65,11 +75,14 @@ class PostController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     * @param Post $edited_post
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Post $edited_post)
     {
-        //
+        $post=Post::find($id);
+        $this->authorize('isOwner',$post);
+       //TODO edit
     }
 
     /**
@@ -81,7 +94,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
     }
 
     /**
@@ -92,7 +105,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
+
         $post=Post::find($id);
+        $this->authorize('isOwner',$post);
         $post->delete();
     }
     public function getLikes($id)

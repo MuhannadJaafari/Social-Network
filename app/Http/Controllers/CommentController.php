@@ -61,9 +61,12 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id,)
+    public function edit($id,Comment $edited_comment)
     {
-        //
+        $comment =Comment::find($id);
+        $this->authorize('isOwner',$comment);
+        $comment =$edited_comment;
+        $comment->update();
     }
 
     /**
@@ -87,6 +90,7 @@ class CommentController extends Controller
     public function destroy($id)
     {
         $comment =Comment::find($id);
+        $this->authorize('isOwner',$comment);
         $comment->delete();
     }
 }

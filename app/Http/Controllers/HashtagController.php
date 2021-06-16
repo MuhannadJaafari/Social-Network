@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hashtag;
 use Illuminate\Http\Request;
 
 class HashtagController extends Controller
@@ -34,18 +35,22 @@ class HashtagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $hash=Hashtag::create($request->all());
+        $hash->save();
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
-    {
-        //
+    {    $hashtag=Hashtag::find($id);
+        return response()->json(['name'=>$hashtag->name,
+            'post_id'=>$hashtag->post_id,
+            ]);
     }
 
     /**
@@ -79,6 +84,7 @@ class HashtagController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $hashtag=Hashtag::find($id);
+        $hashtag->delete();
     }
 }
