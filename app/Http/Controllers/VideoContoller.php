@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class VideoContoller extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -20,7 +23,7 @@ class VideoContoller extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -30,32 +33,35 @@ class VideoContoller extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
 
-        $video=Video::create($request->all());
-        $video->save();
+        Video::create($request->all());
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function show($id)
-    {
-        //TODO
+    public function show(Request $request): JsonResponse
+    {   $video=Video::find($request->id);
+        return response()->json([
+            'videoable_type'=>$video->videoable_type,
+            'videoable_id'=>$video->videoable_id,
+            'url'=>$video->url]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -65,23 +71,31 @@ class VideoContoller extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
+     * @throws AuthorizationException
      */
-    public function update(Request $request, $id)
+    public function update(Request $request): JsonResponse
     {
-        //
+        $video=Video::find($request->id);
+        $this->authorize('isOwner',$video);
+        $video->url=$request->url;
+        $video->update();
+        return response()->json(['done']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
+     * @throws AuthorizationException
      */
-    public function destroy($id)
+    public function destroy(Request $request): JsonResponse
     {
-        //
+        $video=Video::find($request->id);
+        $this->authorize('isOwner',$video);
+        $video->delete();
+        return \response()->json(['done']);
     }
 }

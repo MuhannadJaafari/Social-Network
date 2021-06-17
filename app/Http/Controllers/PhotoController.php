@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Photo;
 use App\Models\Users\User;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PhotoController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -21,7 +24,7 @@ class PhotoController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -31,21 +34,21 @@ class PhotoController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
+        Photo::create($request->all());
+        return response()->json(['done']);
 
-        $photo =Photo::create($request->all());
-        $photo->save();
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function show($id)
     {
@@ -58,10 +61,10 @@ class PhotoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
-    public function edit($id)
+    public function edit(int $id): Response
     {
         //
     }
@@ -69,31 +72,37 @@ class PhotoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $photo=Photo::find($request->id);
+        $this->authorize($request,$photo);
+        $photo->url=$request->url;
+        $photo->update();
+        return response()->json(['done']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
+     * @throws AuthorizationException
      */
-    public function destroy($id)
+    public function destroy(Request $request): JsonResponse
     {
-        $photo=Photo::find($id);
+        $photo=Photo::find($request->id);
+        $this->authorize('isOwner',$photo);
         $photo->delete();
+        return response()->json(['done']);
     }
-    public function updateProfilePic(User $user,Photo $photo)
+    public function updateProfilePic(Request $request)
     {
         //TODO
     }
-    public function deleteProfilePic(User $user,Photo $photo)
+    public function deleteProfilePic(Request $request)
     {
         //TODO
     }
