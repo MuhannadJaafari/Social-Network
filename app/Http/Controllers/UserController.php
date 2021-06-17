@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper;
 use App\Models\Users\User;
 use App\Models\Users\Username;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -39,14 +40,14 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $user=User::create($request->all());
-        $user->save();
+
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function show(User $user)
     {
@@ -89,13 +90,16 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $user = User::find($id);
+        $user = User::find($request->id);
+
+        $this->authorize('isOwner',$user);
         $user->delete();
+        return response()->json(['done']);
     }
 
     public function getPosts($id)

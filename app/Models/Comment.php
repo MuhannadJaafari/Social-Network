@@ -20,11 +20,6 @@ class Comment extends Model
         return $this->belongsTo(Post::class);
     }
 
-    public function text()
-    {
-        return $this->morphOne(Text::class, 'textable');
-    }
-
     public function photo()
     {
         return $this->morphOne(Photo::class, 'photoable');

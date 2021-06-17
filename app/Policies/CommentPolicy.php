@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Comment;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CommentPolicy

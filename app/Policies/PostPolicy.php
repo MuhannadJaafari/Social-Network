@@ -22,7 +22,7 @@ class PostPolicy
     }
     public function isOwner(User $user,Post $post): bool
     {
-        return $user->id === $post->user_id;
+        return $user->id === $post->postable_id;
     }
 
 }

@@ -33,14 +33,13 @@ Route::get('{post_id}/comments',[PostController::class,'getComments']);
 Route::get('{post_id}/likes',[PostController::class,'getLikes']);
 Route::get('{post_id}/sharers',[PostController::class,'getSharers']);
 //protected routes
-
 Route::group(['middleware'=>['auth:sanctum']],function (){
 Route::post('/logout',[AuthController::class,'logout']);
 Route::delete('/deactivate',[UserController::class,'destroy']);
 Route::put('/update',[UserController::class,'destroy']);
 Route::post('/newPost',[PostController::class,'store']);
 Route::put('/updatePost',[PostController::class,'update']);
-Route::delete('/deletePost',[PostController::class,'destroy']);
+Route::delete('/deletePost/',[PostController::class,'destroy']);
 Route::post('/newComment',[CommentController::class,'store']);
 Route::put('/updateComment',[CommentController::class,'update']);
 Route::delete('/deleteComment',[CommentController::class,'destroy']);
