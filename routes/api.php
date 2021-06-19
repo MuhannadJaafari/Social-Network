@@ -34,19 +34,30 @@ Route::get('{post_id}/sharers', [PostController::class, 'getSharers']);
 //protected routes
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/relation/new', [RelationController::class, 'add']);
-    Route::post('/relation/accept', [RelationController::class, 'accept']);
-    Route::post('/relation/reject', [RelationController::class, 'delete']);
-    Route::post('/relation/unfriend', [RelationController::class, 'delete']);
-    Route::post('/relation/block', [RelationController::class, 'block']);
-    Route::post('/relation/unblock',[RelationController::class, 'unblock']);
-    Route::post('/relation/getRelation', [RelationController::class, 'getCurrentRelation']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
+
+
+    Route::prefix('relation')->group(function () {
+        Route::post('/new', [RelationController::class, 'add']);
+        Route::post('/accept', [RelationController::class, 'accept']);
+        Route::post('/reject', [RelationController::class, 'delete']);
+        Route::post('/unfriend', [RelationController::class, 'delete']);
+        Route::post('/block', [RelationController::class, 'block']);
+        Route::post('/unblock', [RelationController::class, 'unblock']);
+        Route::post('/getRelation', [RelationController::class, 'getCurrentRelation']);
+    });
+
+
+    Route::prefix('post')->group(function () {
+        Route::post('/new', [PostController::class, 'store']);
+        Route::put('/update', [PostController::class, 'update']);
+        Route::delete('/delete', [PostController::class, 'destroy']);
+    });
+
     Route::delete('/deactivate', [UserController::class, 'destroy']);
     Route::put('/update', [UserController::class, 'update']);
-    Route::post('/newPost', [PostController::class, 'store']);
-    Route::put('/updatePost', [PostController::class, 'update']);
-    Route::delete('/deletePost', [PostController::class, 'destroy']);
+
     Route::post('/newComment', [CommentController::class, 'store']);
     Route::put('/updateComment', [CommentController::class, 'update']);
     Route::delete('/deleteComment', [CommentController::class, 'destroy']);

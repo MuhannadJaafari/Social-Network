@@ -1,14 +1,5 @@
 <?php
-
-use App\Models\Conversation;
-use App\Models\Users\Address;
-use App\Models\Users\Username;
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
-use App\Models\Post;
-use App\Models\Users\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,6 +12,4 @@ use App\Models\Users\User;
 */
 
 Route::get('/', function () {
-    $u = new \App\Policies\UserPolicy();
-    $u->canUnblock(User::find(1),User::find(4));
 });
