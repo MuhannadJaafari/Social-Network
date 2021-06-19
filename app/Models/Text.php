@@ -12,7 +12,8 @@ class Text extends Model
         'body'
     ];
     public $timestamps = false;
-    public function textable(){
+    public function textable()
+    {
         return $this->morphTo();
     }
 }
