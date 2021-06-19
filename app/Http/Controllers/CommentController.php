@@ -72,7 +72,7 @@ class CommentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resourcze in storage.
      *
      * @param Request $request
      * @return JsonResponse

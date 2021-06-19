@@ -65,12 +65,11 @@ class User extends Authenticate
         return $this->hasOne(Address::class,'user_id');
     }
     public function relations(){
-        $relation = $this->belongsToMany(User::class,'relation_user','user1_id','user2_id')->withPivot('relation');
+        $relation = $this->belongsToMany(User::class,'relation_user','user2_id','user1_id')->withPivot('relation');
         if($relation->count()){
             return $relation;
         }
-        return $this->belongsToMany(User::class,'relation_user','user2_id','user1_id')->withPivot('relation');
-
+        return $this->belongsToMany(User::class,'relation_user','user1_id','user2_id')->withPivot('relation');
     }
     public function conversationas(): HasMany
     {

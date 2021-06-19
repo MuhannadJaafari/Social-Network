@@ -6,7 +6,9 @@ use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
 use App\Models\Text;
+use App\Models\Users\Address;
 use App\Models\Users\User;
+use App\Models\Users\Username;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -33,6 +35,8 @@ class UserSeeder extends Seeder
 
                 ->count(5)
             )
+            ->has(Username::factory()->count(1))
+            ->has(Address::factory()->count(1))
             ->create();
 
 

@@ -1,17 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
-
-use App\Models\Comment;
-use App\Models\Like;
-use App\Models\Photo;
 use App\Models\Post;
-use App\Models\Text;
-use App\Models\Users\User;
-use App\Models\Video;
-use http\Env\Response;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -39,27 +28,26 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $user=auth()->user();
-        $post=new Post;
-        $post->text_body=$request->text_body;
+        $user = auth()->user();
+        $post = new Post();
+        $post->text_body = $request->text_body;
         $user->posts()->save($post);
-        /*$request=collect($request);
-        $post_info = $this->helper->filter($request,['user_id,postable_id,postable_type,text,photo_url,video_url']);
-        $post=Post::create($post_info['user_id,postable_id,postable_type,text']);*/
-
-        /*if($post_info['photo_url'])
-        {
-          //TODO
-        }
-        if($post_info['vider_url'])
-        {
-            //TODO
-        }*/
+//        $request=collect($request);
+//        $post_info = $this->helper->filter($request,['user_id,postable_id,postable_type,text,photo_url,video_url']);
+//        $post=Post::create($post_info['user_id,postable_id,postable_type,text']);
+//        if($post_info['photo_url'])
+//        {
+//          //TODO
+//        }
+//        if($post_info['vider_url'])
+//        {
+//            //TODO
+//        }
 
     }
 
@@ -88,38 +76,35 @@ class PostController extends Controller
      */
     public function edit($id, Post $edited_post)
     {
-        //
+        $post=Post::find($id);
+        $this->authorize('isOwner',$post);
+       //TODO edit
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
-     * @throws AuthorizationException
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $post=Post::find($request->id);
-        $this->authorize('isOwner',$post);
-        $post->text_body=$request->text_body;
-        $post->update();
 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request): \Illuminate\Http\JsonResponse
+    public function destroy(Request $request)
     {
 
         $post=Post::find($request->id);
-        $this->authorize('isOwner',$post);
+//        $this->authorize('isOwner',$post);
         $post->delete();
-        return response()->json(['done']);
     }
     public function getLikes($id)
     {

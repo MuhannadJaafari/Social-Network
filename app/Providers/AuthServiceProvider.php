@@ -24,10 +24,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Post::class => PostPolicy::class,
-        Comment::class,CommentPolicy::class,
-        User::class,UserPolicy::class,
-        Photo::class,PhotoPolicy::class,
-        Video::class,VideoPolicy::class
+        Comment::class => CommentPolicy::class,
+        User::class => UserPolicy::class,
+        Photo::class => PhotoPolicy::class,
+        Video::class => VideoPolicy::class
     ];
 
     /**
@@ -38,7 +38,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-
+        Gate::define('can-view-user', [UserPolicy::class, 'canViewUser']);
+        Gate::define('can-unblock-user', [UserPolicy::class, 'canUnblock']);
     }
 }

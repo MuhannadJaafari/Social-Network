@@ -17,7 +17,8 @@ class CreateRelationsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user1_id');
             $table->unsignedBigInteger('user2_id');
-            $table->string('relation');
+            $table->unsignedBigInteger('blocker');
+            $table->string('relation')->default('requested');
             $table->foreign('user1_id')->references('id')->on('users');
             $table->foreign('user2_id')->references('id')->on('users');
             $table->timestamps();

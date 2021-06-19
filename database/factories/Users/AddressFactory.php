@@ -1,19 +1,18 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Users;
 
-use App\Models\Post;
+use App\Models\Users\Address;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
-class PostFactory extends Factory
+class AddressFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Post::class;
+    protected $model = Address::class;
 
     /**
      * Define the model's default state.
@@ -23,7 +22,8 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            'text_body'=>$this->faker->text
+            'town'=>$this->faker->country,
+            'city'=>$this->faker->city,
         ];
     }
 }

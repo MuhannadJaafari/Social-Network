@@ -21,6 +21,6 @@ use App\Models\Users\User;
 */
 
 Route::get('/', function () {
-    $username =  Username::where('name', '=', 'muhannad_99')->firstOrFail();
-    dd($username->useable()->first());
+    $u = new \App\Policies\UserPolicy();
+    $u->canUnblock(User::find(1),User::find(4));
 });
