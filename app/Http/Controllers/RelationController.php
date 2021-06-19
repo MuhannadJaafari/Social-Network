@@ -72,8 +72,12 @@ class RelationController extends Controller
             'success'=>'1'
         ]);
     }
+<<<<<<< HEAD
     public function delete(Request $request)
     {
+=======
+    public function delete(Request $request){
+>>>>>>> origin/master
         $user = User::find(auth()->user()->getAuthIdentifier());
         $relation = $user->relations()->where('user1_id',$request->id)->orWhere('user2_id',$request->id)->first();
         $relation->delete();
