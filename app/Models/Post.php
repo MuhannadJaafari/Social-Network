@@ -13,7 +13,8 @@ class Post extends Model
 {
     use HasFactory;
 
-    public function postable(){
+    public function postable()
+    {
         return $this->morphTo();
     }
     public function photos() {

@@ -34,15 +34,16 @@ class CommentController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $comment =new Comment;
         $comment->user_id=auth()->user()->id;
         $comment->post_id=$request->post_id;
         $comment->text_body=$request->text_body;
         $comment->save();
+        return \response()->json(['done']);
     }
 
     /**
@@ -51,7 +52,7 @@ class CommentController extends Controller
      * @param  int  $id
      * @return JsonResponse
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $comment =Comment::find($id);
         return response()->json([
@@ -72,13 +73,13 @@ class CommentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resourcze in storage.
      *
      * @param Request $request
      * @return JsonResponse
      * @throws AuthorizationException
      */
-    public function update(Request $request)
+    public function update(Request $request): JsonResponse
     {
                 $comment =Comment::find($request->id);
                 $this->authorize('isOwner',$comment);
@@ -94,7 +95,7 @@ class CommentController extends Controller
      * @return JsonResponse
      * @throws AuthorizationException
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): JsonResponse
     {
         $comment =Comment::find($request->comment_id);
         $this->authorize('isOwner',$comment);

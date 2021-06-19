@@ -11,7 +11,8 @@ class Username extends Model
     use HasFactory;
     protected $fillable = ['name'];
     public $timestamps = false;
-    public function useable(){
+    public function useable()
+    {
         return $this->morphTo();
     }
 }

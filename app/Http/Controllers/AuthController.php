@@ -13,7 +13,7 @@ class AuthController extends Controller
 {
     protected $helper;
 
-    public function register(UserAccountCreatingRequest $request)
+    public function register(UserAccountCreatingRequest $request): \Illuminate\Http\JsonResponse
     {
 
         $request = collect($request);
@@ -27,7 +27,7 @@ class AuthController extends Controller
             'id' => $user->id]);
     }
 
-    public function login(UserLogInRequest $request)
+    public function login(UserLogInRequest $request): \Illuminate\Http\JsonResponse
     {
 
         if (!Auth::attempt($request->only('email', 'password'))) {

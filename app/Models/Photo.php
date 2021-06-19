@@ -9,7 +9,8 @@ class Photo extends Model
 {
     use HasFactory;
 
-    public function photoable(){
+    public function photoable()
+    {
         return $this->morphTo();
     }
     public function photoType(){
