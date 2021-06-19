@@ -19,7 +19,7 @@ class Page extends Model
         return $this->morphOne(Username::class,'useable');
     }
     public function roles(){
-        return $this->morphMany(Role::class,'roleable_type');
+        return $this->morphMany(Role::class,'roleable');
     }
 
 }

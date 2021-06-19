@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RelationController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -54,6 +55,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('/update', [PostController::class, 'update']);
         Route::delete('/delete', [PostController::class, 'destroy']);
     });
+
+    Route::post('/search',[SearchController::class,'search']);
 
     Route::delete('/deactivate', [UserController::class, 'destroy']);
     Route::put('/update', [UserController::class, 'update']);
