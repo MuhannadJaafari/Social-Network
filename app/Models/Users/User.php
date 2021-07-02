@@ -4,6 +4,7 @@ namespace App\Models\Users;
 
 use App\Models\Comment;
 use App\Models\Conversation;
+use App\Models\Group;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\Relation;
@@ -87,5 +88,10 @@ class User extends Authenticate
     {
         return $this->hasMany(Comment::class);
     }
-
+    public function pages(){
+        return $this->hasMany(Page::class,'creator_id');
+    }
+    public function groups() {
+        return $this->hasMany(Group::class,'creator_id');
+    }
 }

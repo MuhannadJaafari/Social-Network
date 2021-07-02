@@ -21,6 +21,5 @@ use App\Models\Users\User;
 */
 
 Route::get('/', function () {
-    $u = new \App\Policies\UserPolicy();
-    $u->canUnblock(User::find(1),User::find(4));
+
 });

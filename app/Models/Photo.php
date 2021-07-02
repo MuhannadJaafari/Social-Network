@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Photo extends Model
-{
+{ protected $fillable=[
+    'photo_type'
+];
     use HasFactory;
 
     public function photoable()
     {
         return $this->morphTo();
     }
-    public function photoType(){
-        return $this->hasOne(PhotoType::class);
-    }
+
 }
