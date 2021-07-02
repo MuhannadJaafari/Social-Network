@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\Photo;
 use App\Models\Post;
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -33,10 +35,13 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
+        $user = User::find(1);// auth()->user();
         $post = new Post();
-        $post->text_body = $request->text_body;
-        $user->posts()->save($post);
+        $post->text_body ='hii';// $request->text_body;
+        $post = $user->posts()->make($post->getAttributes());
+        $photo = new Photo();
+
+
 //        $request=collect($request);
 //        $post_info = $this->helper->filter($request,['user_id,postable_id,postable_type,text,photo_url,video_url']);
 //        $post=Post::create($post_info['user_id,postable_id,postable_type,text']);
@@ -64,7 +69,6 @@ class PostController extends Controller
             'post_images_url'=>[$post->photos()->url()],
             'post_videos_url'=>[$post->videos()->url()]
             ]);
-
     }
 
     /**
