@@ -7,11 +7,7 @@ use App\Models\Conversation;
 use App\Models\Group;
 use App\Models\Page;
 use App\Models\Post;
-use App\Models\Relation;
-use App\Models\Role;
-use http\Exception\RuntimeException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -20,7 +16,9 @@ use \Illuminate\Database\Eloquent\Relations\HasOne as HasOne;
 
 class User extends Authenticate
 {
-    use HasFactory, Notifiable, HasApiTokens;/**
+    use HasFactory, Notifiable, HasApiTokens;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -61,27 +59,30 @@ class User extends Authenticate
 
     public function username()
     {
-        return $this->morphOne(Username::class,'useable');
+        return $this->morphOne(Username::class, 'useable');
     }
 
     public function address(): HasOne
     {
-        return $this->hasOne(Address::class,'user_id');
+        return $this->hasOne(Address::class, 'user_id');
     }
-    public function relations(){
-        $relation = $this->belongsToMany(User::class,'relation_user','user2_id','user1_id')->withPivot('relation');
-        if($relation->count()){
+
+    public function relations()
+    {
+        $relation = $this->belongsToMany(User::class, 'relation_user', 'user2_id', 'user1_id')->withPivot('relation');
+        if ($relation->count()) {
             return $relation;
         }
-        return $this->belongsToMany(User::class,'relation_user','user1_id','user2_id')->withPivot('relation');
+        return $this->belongsToMany(User::class, 'relation_user', 'user1_id', 'user2_id')->withPivot('relation');
     }
+
     public function conversationas(): HasMany
     {
-        $relation = $this->hasMany(Conversation::class,'user1_id')->where('user1_id','=',$this->id);
-        if($relation->count()){
+        $relation = $this->hasMany(Conversation::class, 'user1_id')->where('user1_id', '=', $this->id);
+        if ($relation->count()) {
             return $relation;
         }
-        return $this->hasMany(Conversation::class,'user2_id')->where('user2_id','=',$this->id);
+        return $this->hasMany(Conversation::class, 'user2_id')->where('user2_id', '=', $this->id);
 
     }
 
@@ -89,10 +90,14 @@ class User extends Authenticate
     {
         return $this->hasMany(Comment::class);
     }
-    public function pages(){
-        return $this->hasMany(Page::class,'creator_id');
+
+    public function pages()
+    {
+        return $this->belongsToMany(Page::class, 'page_user');
     }
-    public function groups() {
-        return $this->hasMany(Group::class,'creator_id');
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'group_user');
     }
 }

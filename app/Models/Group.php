@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Users\User;
 use App\Models\Users\Username;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,18 +10,24 @@ use Illuminate\Database\Eloquent\Model;
 class Group extends Model
 {
     use HasFactory;
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
     public function posts()
     {
-        return $this->morphMany(Post::class,'postable');
+        return $this->morphMany(Post::class, 'postable');
     }
+
     public function username()
     {
-        return $this->morphOne(Username::class,'useable');
+        return $this->morphOne(Username::class, 'useable');
     }
-    public function roles(){
-        return $this->morphMany(Role::class,'roleable');
-    }
-    public function photo(){
-        return $this->morphMany(Photo::class,'photoable');
+
+    public function photo()
+    {
+        return $this->morphMany(Photo::class, 'photoable');
     }
 }
