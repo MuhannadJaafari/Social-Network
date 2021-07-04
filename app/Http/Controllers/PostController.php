@@ -142,4 +142,12 @@ class PostController extends Controller
         }
         return $this->helper->paginate(collect($arr)->sortBy('updated_at'),3,null,['path'=>$request->fullUrl()]);
     }
+    public function sharePost(Request $request)
+    {   $shared_post = Post::find($request->shared_post_id);
+        $user = User::find(auth()->user()->getAuthIdentifier());
+        $post=new Post();
+        $post->text_body=$request->text_body;
+        $user->posts()->save($post);
+        $post->share()->save($shared_post);
+    }
 }
