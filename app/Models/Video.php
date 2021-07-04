@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Video extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     public function videoable(){
         return $this->morphTo();
     }

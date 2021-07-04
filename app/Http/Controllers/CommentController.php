@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,10 +39,10 @@ class CommentController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $comment =new Comment;
-        $comment->user_id=auth()->user()->id;
-        $comment->post_id=$request->post_id;
-        $comment->text_body=$request->text_body;
+        $comment = new Comment;
+        $comment->user_id = auth()->user()->id;
+        $comment->post_id = $request->post_id;
+        $comment->text_body = $request->text_body;
         $comment->save();
         return \response()->json(['done']);
     }
@@ -49,16 +50,16 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return JsonResponse
      */
     public function show($id): JsonResponse
     {
-        $comment =Comment::find($id);
+        $comment = Comment::find($id);
         return response()->json([
-            'comment_text'=>$comment->text(),
-            'comment_photo_url'=>$comment->photo()->url(),
-            'comment_video_url'=>$comment->video()->url()
+            'comment_text' => $comment->text(),
+            'comment_photo_url' => $comment->photo()->url(),
+            'comment_video_url' => $comment->video()->url()
         ]);
     }
 
@@ -81,11 +82,11 @@ class CommentController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
-                $comment =Comment::find($request->id);
-                $this->authorize('isOwner',$comment);
-                $comment->text_body=$request->text_body;
-                $comment->update();
-                return \response()->json(['done']);
+        $comment = Comment::find($request->id);
+        $this->authorize('isOwner', $comment);
+        $comment->text_body = $request->text_body;
+        $comment->update();
+        return \response()->json(['done']);
     }
 
     /**
@@ -97,9 +98,21 @@ class CommentController extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {
-        $comment =Comment::find($request->comment_id);
-        $this->authorize('isOwner',$comment);
+        $comment = Comment::find($request->comment_id);
+        $this->authorize('isOwner', $comment);
         $comment->delete();
         return response()->json(['done']);
+    }
+
+    public function getComments(Request $request)
+    {
+        //todo know how $comment->photo works
+        $post = Post::find($request->id);
+        $comments = $post->comments()->simplePaginate(10);
+        foreach ($comments as $comment) {
+            $comment->photo;
+            $comment->video;
+        }
+        return $comments;
     }
 }

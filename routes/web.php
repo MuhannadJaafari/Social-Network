@@ -1,4 +1,10 @@
 <?php
+
+use App\Helper;
+use App\Models\Post;
+use App\Models\Users\User;
+use Illuminate\Container\Container;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -11,5 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/hi', function () {
+    $cnt = new \App\Http\Controllers\PostController();
+    $cnt->getTimeline(null);
 });

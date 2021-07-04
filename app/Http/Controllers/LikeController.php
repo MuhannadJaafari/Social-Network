@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Like;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
@@ -83,5 +84,9 @@ class LikeController extends Controller
     {
         $like=Like::find($id);
         $like->delete();
+    }
+    public function getLikes(Request $request){
+        $post = Post::find($request->id);
+        return $post->likes()->simplePaginate(10);
     }
 }

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\RelationController;
 use App\Http\Controllers\SearchController;
+use App\Models\Comment;
+use App\Models\Like;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -38,6 +40,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::prefix('user')->group(function () {
+        Route::post('/posts', [PostController::class, 'getPosts']);
+        Route::post('/timeline',[PostController::class,'getTimeline']);
+    });
+
+    Route::prefix('post')->group(function () {
+        Route::post('/comments', [CommentController::class, 'getComments']);
+        Route::post('/likes',[LikeController::class,'getLikes']);
+    });
+
 
     Route::prefix('relation')->group(function () {
         Route::post('/new', [RelationController::class, 'add']);
@@ -56,7 +68,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('/delete', [PostController::class, 'destroy']);
     });
 
-    Route::post('/search',[SearchController::class,'search']);
+    Route::post('/search', [SearchController::class, 'search']);
 
     Route::delete('/deactivate', [UserController::class, 'destroy']);
     Route::put('/update', [UserController::class, 'update']);

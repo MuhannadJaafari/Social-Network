@@ -8,6 +8,7 @@ use App\Models\Page;
 use App\Models\Post;
 use App\Models\Relation;
 use App\Models\Role;
+use http\Exception\RuntimeException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticate;
@@ -28,7 +29,6 @@ class User extends Authenticate
         'email',
         'password',
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -40,7 +40,8 @@ class User extends Authenticate
         'remember_token',
         'email_verified_at',
         'updated_at',
-        'created_at'
+        'created_at',
+        'pivot'
     ];
 
     /**
