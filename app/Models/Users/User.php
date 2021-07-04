@@ -93,11 +93,15 @@ class User extends Authenticate
 
     public function pages()
     {
-        return $this->belongsToMany(Page::class, 'page_user');
+        return $this->belongsToMany(Page::class,'page_user');
     }
 
     public function groups()
     {
         return $this->belongsToMany(Group::class, 'group_user');
+    }
+    public function creatPages()
+    {
+        return $this->hasMany(Page::class,'creator_id');
     }
 }

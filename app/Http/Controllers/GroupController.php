@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Photo;
+use App\Models\Post;
 use App\Models\Role;
 use App\Models\Users\User;
 use App\Models\Users\Username;
@@ -102,5 +103,11 @@ class GroupController extends Controller
         $role= new Role();
         $role->user_id=$request->user_id;
         $group->roles()->save($role);
+    }
+    public function addGroupPost(Request $request){
+        $group=Group::find($request->group_id);
+        $post= new Post();
+        $post->text_body=$request->text_body;
+        $group->posts()->save($post);
     }
 }

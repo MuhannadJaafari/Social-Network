@@ -17,6 +17,7 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->morphs('postable');
             $table->text('text_body');
+            $table->boolean('shared');
             $table->timestamps();
         });
     }

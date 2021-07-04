@@ -6,6 +6,7 @@ use App\Models\Group;
 use App\Models\Page;
 use App\Models\Photo;
 
+use App\Models\Post;
 use App\Models\Role;
 use App\Models\Users\User;
 use App\Models\Users\Username;
@@ -46,6 +47,7 @@ class PageController extends Controller
         $page->name=$request->name;
 
         $user = User::find(auth()->user()->getAuthIdentifier());
+        $user->role='admin';
         $user->pages()->save($page);
         $username=new Username();
         $username->name=$request->username;
@@ -58,8 +60,6 @@ class PageController extends Controller
         $cover->url=$request->cover_url;
         $cover->photo_type='cover';
         $page->photos()->save($cover);
-
-
     }
 
     /**
@@ -112,5 +112,12 @@ class PageController extends Controller
         $page = Page::find($request->page_id);
         $role->user_id=$request->user_id;
         $page->roles()->save($role);
+    }
+    public function addPagePost(Request $request)
+    {
+     $page=Page::find($request->page_id);
+     $post= new Post();
+     $post->text_body=$request->text_body;
+     $page->posts()->save($post);
     }
 }

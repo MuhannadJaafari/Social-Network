@@ -146,6 +146,7 @@ class PostController extends Controller
     {   $shared_post = Post::find($request->shared_post_id);
         $user = User::find(auth()->user()->getAuthIdentifier());
         $post=new Post();
+        $post->shared=true;
         $post->text_body=$request->text_body;
         $user->posts()->save($post);
         $post->share()->save($shared_post);

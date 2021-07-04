@@ -13,7 +13,7 @@ class Page extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class,);
     }
 
     public function posts()
@@ -26,10 +26,6 @@ class Page extends Model
         return $this->morphOne(Username::class, 'useable');
     }
 
-    public function roles()
-    {
-        return $this->morphMany(Role::class, 'roleable');
-    }
 
     public function photos()
     {

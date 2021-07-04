@@ -14,6 +14,7 @@ class CreateSharePostsTable extends Migration
         Schema::create('share_posts', function (Blueprint $table) {
             $table->unsignedBigInteger('source_post_id');
             $table->unsignedBigInteger('shared_post_id');
+
             $table->foreign('source_post_id')->references('id')->on('posts');
             $table->foreign('shared_post_id')->references('id')->on('posts');
             $table->timestamps();

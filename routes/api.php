@@ -90,4 +90,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/newGroup',[GroupController::class,'store']);
     Route::post('/addPageRole',[PageController::class,'addRole']);
     Route::post('/addGroupRole',[GroupController::class,'addRole']);
+    Route::post('/addPagePost',[PageController::class,'addPagePost']);
+    Route::post('/addGroupPost',[GroupController::class,'addGroupPost']);
 });
