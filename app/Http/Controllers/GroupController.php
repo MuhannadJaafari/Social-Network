@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\Photo;
+use App\Models\Role;
+use App\Models\Users\User;
+use App\Models\Users\Username;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -35,7 +39,18 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $group =new Group();
+        $group->name=$request->name;
+        $user=User::find(auth()->user()->getAuthIdentifier());
+        $user->groups()->save($group);
+        $username=new Username();
+        $username->name=$request->username;
+        $group->username()->save($username);
+        $photo=new Photo();
+        $photo->url=$request->photo_url;
+        $photo->photo_type='profile';
+        $group->photo()->save($photo);
+
     }
 
     /**
@@ -81,5 +96,11 @@ class GroupController extends Controller
     public function destroy(Group $group)
     {
         //
+    }
+    public function addRole(Request $request){
+        $group = Group::find($request->group_id);
+        $role= new Role();
+        $role->user_id=$request->user_id;
+        $group->roles()->save($role);
     }
 }

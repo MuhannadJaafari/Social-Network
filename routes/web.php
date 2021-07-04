@@ -1,11 +1,14 @@
 <?php
 
-use App\Helper;
+use App\Models\Conversation;
+use App\Models\Users\Address;
+use App\Models\Users\Username;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Post;
 use App\Models\Users\User;
-use Illuminate\Container\Container;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,7 +20,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/hi', function () {
-    $cnt = new \App\Http\Controllers\PostController();
-    $cnt->getTimeline(null);
+Route::get('/', function () {
+
 });

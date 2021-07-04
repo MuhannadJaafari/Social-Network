@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\RelationController;
 use App\Http\Controllers\SearchController;
 use App\Models\Comment;
@@ -84,4 +86,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/updateProfilePic', [PhotoController::class, 'updateProfilePic']);
     Route::delete('/deleteProfilePic', [PhotoController::class, 'deleteProfilePic']);
     Route::get('/{user}', [UserController::class, 'show']);
+    Route::post('/newPage',[PageController::class,'store']);
+    Route::post('/newGroup',[GroupController::class,'store']);
+    Route::post('/addPageRole',[PageController::class,'addRole']);
+    Route::post('/addGroupRole',[GroupController::class,'addRole']);
 });
