@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Photo;
 use App\Models\Post;
+use App\Models\Users\User;
+use App\Models\Video;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,10 +43,23 @@ class CommentController extends Controller
     public function store(Request $request): JsonResponse
     {
         $comment = new Comment;
-        $comment->user_id = auth()->user()->id;
+        $post=Post::find($request->post_id);
+        $comment->user_id = auth()->user()->getAuthIdentifier();
         $comment->post_id = $request->post_id;
         $comment->text_body = $request->text_body;
+
         $comment->save();
+
+        if($request->photo_url){
+            $photo=new Photo();
+            $photo->url=$request->photo_url;
+            $comment->photo()->save($photo);
+        }
+        else if($request->video_url){
+            $video=new Video();
+            $video->url=$request->video_url;
+            $comment->video()->save($video);
+        }
         return \response()->json(['done']);
     }
 
@@ -114,5 +130,28 @@ class CommentController extends Controller
             $comment->video;
         }
         return $comments;
+    }
+    public function reply(Request $request)
+    {
+        $comment =Comment::find($request->comment_id);
+        $user = User::find(auth()->user()->getAuthIdentifier());
+        $reply = new Comment();
+        $reply->reply=true;
+        $reply->text_body=$request->text_body;
+        $reply->user_id=$user->id;
+        $reply->post_id=$comment->post_id;
+        $reply->save();
+
+        $reply->replies()->save($comment);
+        if($request->photo_url){
+            $photo = new Photo();
+            $photo->url=$request->photo_url;
+            $reply->photo()->save($photo);
+        }
+        else if($request->video_url){
+            $video=new Video();
+            $video->url=$request->video_url;
+            $reply->video()->save($video);
+        }
     }
 }

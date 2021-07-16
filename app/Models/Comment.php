@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     use HasFactory;
+    protected $fillable=['reply'];
 
     public function user()
     {
@@ -26,5 +27,9 @@ class Comment extends Model
     }
     public function video() {
         return $this->morphOne(Video::class,'videoable');
+    }
+    public function replies()
+    {
+        return $this->belongsToMany(Comment::class,'replies','reply_id','comment_id');
     }
 }

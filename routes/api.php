@@ -92,4 +92,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/addGroupRole',[GroupController::class,'addRole']);
     Route::post('/addPagePost',[PageController::class,'addPagePost']);
     Route::post('/addGroupPost',[GroupController::class,'addGroupPost']);
+    Route::post('/addReply',[CommentController::class,'reply']);
 });
