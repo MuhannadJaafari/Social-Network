@@ -7,6 +7,7 @@ use App\Http\Requests\UserLogInRequest;
 use App\Models\Users\Address;
 use App\Models\Users\User;
 use App\Models\Users\Username;
+use http\Env\Response;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -15,7 +16,6 @@ class AuthController extends Controller
 
     public function register(UserAccountCreatingRequest $request): \Illuminate\Http\JsonResponse
     {
-
         $request = collect($request);
         $user_info = $this->helper->filter($request, ['name', 'email', 'password', 'birth_date']);
         $user_info['password'] = bcrypt($user_info['password']);

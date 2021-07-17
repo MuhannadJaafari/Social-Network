@@ -2,35 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hashtag;
 use App\Models\Photo;
 use App\Models\Post;
 use App\Models\Users\User;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\Video;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,23 +21,14 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::find(1);// auth()->user();
-        $post = new Post();
-        $post->text_body = 'hii';// $request->text_body;
-        $post = $user->posts()->make($post->getAttributes());
-        $photo = new Photo();
 
-//        $request=collect($request);
-//        $post_info = $this->helper->filter($request,['user_id,postable_id,postable_type,text,photo_url,video_url']);
-//        $post=Post::create($post_info['user_id,postable_id,postable_type,text']);
-//        if($post_info['photo_url'])
-//        {
-//          //TODO
-//        }
-//        if($post_info['vider_url'])
-//        {
-//            //TODO
-//        }
+        $user = User::find(auth()->user()->getAuthIdentifier());
+        $post = new Post();
+        $post->text_body = $request->text_body;
+        $post = $user->posts()->save($post);
+        $this->storeHashTags($request, $post);
+        $this->storePhotos($request->instance(), $post);
+        $this->storeVideos($request->instance(), $post);
 
     }
 
@@ -77,29 +49,21 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @param Post $edited_post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id, Post $edited_post)
-    {
-        $post = Post::find($id);
-        $this->authorize('isOwner', $post);
-        //TODO edit
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
 
+        $post = Post::find($request->id);
+        //return $post;
+        // $this->authorize('isOwner', $post);
+
+        $post->delete();
+        $this->store($request);
     }
 
     /**
@@ -112,11 +76,10 @@ class PostController extends Controller
     {
 
         $post = Post::find($request->id);
-//        $this->authorize('isOwner',$post);
         $post->delete();
     }
 
-    public function getPosts(Request $request,$id = null)
+    public function getPosts(Request $request, $id = null)
     {
         $id = $id === null ? $request->id : $id;
         $user = User::find($id);
@@ -140,15 +103,56 @@ class PostController extends Controller
                 array_push($arr, $post);
             }
         }
-        return $this->helper->paginate(collect($arr)->sortBy('updated_at'),3,null,['path'=>$request->fullUrl()]);
+        return $this->helper->paginate(collect($arr)->sortBy('updated_at'), 3, null, ['path' => $request->fullUrl()]);
     }
+
     public function sharePost(Request $request)
-    {   $shared_post = Post::find($request->shared_post_id);
+    {
+        $shared_post = Post::find($request->shared_post_id);
         $user = User::find(auth()->user()->getAuthIdentifier());
-        $post=new Post();
-        $post->shared=true;
-        $post->text_body=$request->text_body;
+        $post = new Post();
+        $post->shared = true;
+        $post->text_body = $request->text_body;
         $user->posts()->save($post);
         $post->share()->save($shared_post);
+    }
+
+    private function storePhotos(Request $request, Post $post)
+    {
+        if (!$request->photos) {
+            return;
+        }
+        foreach ($request->photos as $photo) {
+            $newPhoto = new Photo();
+            $newPhoto->url = $photo->store('postPhoto');
+            $post->photos()->save($newPhoto);
+        }
+    }
+
+    private function storeVideos(Request $request, Post $post)
+    {
+        if (!$request->videos) {
+            return;
+        }
+        foreach ($request->videos as $video) {
+            $newVideo = new Video();
+            $newVideo->url = $video->store('postVideo');
+            $post->videos()->save($newVideo);
+        }
+
+    }
+
+    public function storeHashtags(Request $request, Post $post)
+    {
+        if (!$request->hashtags) {
+            return;
+        }
+        foreach ($request->hashtags as $hashtag) {
+            $newHashtag = Hashtag::where('name', '=', $hashtag)->first();
+            if (!$newHashtag) {
+                $newHashtag = Hashtag::create(['name' => $hashtag]);
+            }
+            $post->hashtags()->save($newHashtag);
+        }
     }
 }

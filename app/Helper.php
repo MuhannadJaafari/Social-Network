@@ -12,17 +12,15 @@ class Helper
 {
     public function filter(Collection $models, $keys)
     {
+
         $arr = [];
-        $i = 0;
-        foreach ($models as $model) {
-            foreach ($keys as $key) {
-                $key = strval($key);
-                $arr [$i][$key] = $model[$key];
-            }
-            $i++;
+        foreach ($keys as $key) {
+            $key = strval($key);
+            $arr [$key] = $models[$key];
         }
         return $arr;
     }
+
     public function paginate($items, $perPage = 3, $page = null, $options = [])
     {
 

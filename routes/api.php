@@ -26,6 +26,9 @@ use App\Http\Controllers\PhotoController;
 |
 */
 
+Route::post('/test', [PostController::class, 'test']);
+
+
 //public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -44,14 +47,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('user')->group(function () {
         Route::post('/posts', [PostController::class, 'getPosts']);
-        Route::post('/timeline',[PostController::class,'getTimeline']);
+        Route::post('/timeline', [PostController::class, 'getTimeline']);
     });
-
-    Route::prefix('post')->group(function () {
-        Route::post('/comments', [CommentController::class, 'getComments']);
-        Route::post('/likes',[LikeController::class,'getLikes']);
-    });
-
 
     Route::prefix('relation')->group(function () {
         Route::post('/new', [RelationController::class, 'add']);
@@ -66,14 +63,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('post')->group(function () {
         Route::post('/new', [PostController::class, 'store']);
-        Route::put('/update', [PostController::class, 'update']);
-        Route::delete('/delete', [PostController::class, 'destroy']);
+        Route::post('/update', [PostController::class, 'update']);
+        Route::post('/delete', [PostController::class, 'destroy']);
+        Route::post('/comments', [CommentController::class, 'getComments']);
+        Route::post('/likes', [LikeController::class, 'getLikes']);
     });
 
     Route::post('/search', [SearchController::class, 'search']);
 
     Route::delete('/deactivate', [UserController::class, 'destroy']);
-    Route::put('/update', [UserController::class, 'update']);
+    Route::post('/update', [UserController::class, 'update']);
 
     Route::post('/newComment', [CommentController::class, 'store']);
     Route::put('/updateComment', [CommentController::class, 'update']);
@@ -86,11 +85,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/updateProfilePic', [PhotoController::class, 'updateProfilePic']);
     Route::delete('/deleteProfilePic', [PhotoController::class, 'deleteProfilePic']);
     Route::get('/{user}', [UserController::class, 'show']);
-    Route::post('/newPage',[PageController::class,'store']);
-    Route::post('/newGroup',[GroupController::class,'store']);
-    Route::post('/addPageRole',[PageController::class,'addRole']);
-    Route::post('/addGroupRole',[GroupController::class,'addRole']);
-    Route::post('/addPagePost',[PageController::class,'addPagePost']);
-    Route::post('/addGroupPost',[GroupController::class,'addGroupPost']);
-    Route::post('/addReply',[CommentController::class,'reply']);
+    Route::post('/newPage', [PageController::class, 'store']);
+    Route::post('/newGroup', [GroupController::class, 'store']);
+    Route::post('/addPageRole', [PageController::class, 'addRole']);
+    Route::post('/addGroupRole', [GroupController::class, 'addRole']);
+    Route::post('/addPagePost', [PageController::class, 'addPagePost']);
+    Route::post('/addGroupPost', [GroupController::class, 'addGroupPost']);
+    Route::post('/addReply', [CommentController::class, 'reply']);
 });

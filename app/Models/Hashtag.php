@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Hashtag extends Model
 {
     use HasFactory;
+    protected $fillable = ['name'];
+    public $timestamps = false;
     public function posts(){
         return $this->morphedByMany(Post::class,'hashtagable');
     }
