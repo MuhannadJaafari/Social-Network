@@ -81,7 +81,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $this->authorize('isOwner', $user);
+        //$this->authorize('isOwner', $user);
     }
 
     /**
@@ -104,7 +104,7 @@ class UserController extends Controller
      */
     public function destroy()
     {
-        $id = auth()->user()->id;
+        $id = auth()->user()->getAuthIdentifier();
         $user = User::find($id);
         $user->delete();
     }

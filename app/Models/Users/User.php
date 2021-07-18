@@ -7,7 +7,6 @@ use App\Models\Conversation;
 use App\Models\Group;
 use App\Models\Page;
 use App\Models\Post;
-use App\Models\Reply;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;

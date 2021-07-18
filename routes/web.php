@@ -20,6 +20,4 @@ use App\Models\Users\User;
 |
 */
 
-Route::get('/', function () {
-
-});
+Route::view('forgot_password','reset_password')->name('password.reset');

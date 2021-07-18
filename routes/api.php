@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RelationController;
@@ -36,6 +37,9 @@ Route::get('/{user_id}/photos', [UserController::class, 'getPhotos']);
 Route::get('{post_id}/comments', [PostController::class, 'getComments']);
 Route::get('{post_id}/likes', [PostController::class, 'getLikes']);
 Route::get('{post_id}/sharers', [PostController::class, 'getSharers']);
+Route::post('/password/forgot',[ForgotPasswordController::class,'forgot'])->middleware('guest');
+Route::post('/password/resetpassword', [ForgotPasswordController::class,'resetpassword']);
+
 //protected routes
 
 Route::group(['middleware' => ['auth:sanctum']], function () {

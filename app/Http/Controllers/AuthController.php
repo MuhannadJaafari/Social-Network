@@ -15,7 +15,6 @@ class AuthController extends Controller
 
     public function register(UserAccountCreatingRequest $request): \Illuminate\Http\JsonResponse
     {
-
         $request = collect($request);
         $user_info = $this->helper->filter($request, ['name', 'email', 'password', 'birth_date']);
         $user_info['password'] = bcrypt($user_info['password']);
