@@ -68,7 +68,7 @@ class User extends Authenticate
         return $this->hasOne(Address::class, 'user_id');
     }
 
-    public function relations()
+    public function relationUser()
     {
         $relation = $this->belongsToMany(User::class, 'relation_user', 'user2_id', 'user1_id')->withPivot('relation');
         if ($relation->count()) {
@@ -101,8 +101,5 @@ class User extends Authenticate
     {
         return $this->belongsToMany(Group::class, 'group_user');
     }
-    public function creatPages()
-    {
-        return $this->hasMany(Page::class,'creator_id');
-    }
+
 }

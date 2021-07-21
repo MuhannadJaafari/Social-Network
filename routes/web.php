@@ -24,4 +24,3 @@ use App\Models\Users\User;
 |
 */
 
-

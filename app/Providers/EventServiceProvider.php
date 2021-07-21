@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\CommentDeletedEvent;
 use App\Events\PostDeletedEvent;
+use App\Listeners\CheckHashtagTable;
+use App\Listeners\CommentDeleteRelations;
 use App\Listeners\PostDeleteRelations;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -20,7 +23,12 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         PostDeletedEvent::class => [
-            PostDeleteRelations::class
+            PostDeleteRelations::class,
+            CheckHashtagTable::class
+        ],
+        CommentDeletedEvent::class => [
+            CommentDeleteRelations::class,
+            CheckHashtagTable::class
         ]
     ];
 

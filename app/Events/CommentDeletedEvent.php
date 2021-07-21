@@ -2,24 +2,22 @@
 
 namespace App\Events;
 
-use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PostDeletedEvent
+class CommentDeletedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public Post $post;
+    public Comment $comment;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Post $post)
+    public function __construct(Comment $comment)
     {
-        $this->post = $post;
+        $this->comment = $comment;
     }
-
 }

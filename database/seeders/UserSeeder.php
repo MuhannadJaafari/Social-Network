@@ -3,14 +3,18 @@
 namespace Database\Seeders;
 
 use App\Models\Comment;
+use App\Models\Hashtag;
 use App\Models\Like;
+use App\Models\Page;
 use App\Models\Photo;
 use App\Models\Post;
+use App\Models\RelationUser;
 use App\Models\Text;
 use App\Models\Users\Address;
 use App\Models\Users\User;
 use App\Models\Users\Username;
 use App\Models\Video;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -43,8 +47,7 @@ class UserSeeder extends Seeder
             )
             ->has(Username::factory()->count(1))
             ->has(Address::factory()->count(1))
+//            ->hasAttached(Page::factory()->count(rand(1,3)))
             ->create();
-
-
     }
 }

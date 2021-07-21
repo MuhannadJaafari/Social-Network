@@ -17,6 +17,13 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
+            RealtionUserSeeder::class,
+            PageSeeder::class,
+            GroupSeeder::class,
+            HashtagSeeder::class,
+            HashtagUserSeeder::class,
+            PageUserSeeder::class,
+            GroupUserSeeder::class,
         ]);
     }
 }

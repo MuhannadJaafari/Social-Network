@@ -5,12 +5,12 @@ namespace App\Policies;
 use App\Models\Users\User;
 use App\Models\Post;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 
 class PostPolicy
 {
     use HandlesAuthorization;
-
     /**
      * Create a new policy instance.
      *
@@ -20,7 +20,7 @@ class PostPolicy
     {
         //
     }
-    public function isOwner(User $user,Post $post): bool
+    public function isOwner(User $user,Post $post)
     {
         return $user->id === $post->postable_id;
     }

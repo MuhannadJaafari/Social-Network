@@ -58,10 +58,9 @@ class PostController extends Controller
     public function update(Request $request)
     {
 
-        $post = Post::find($request->id);
+        $post = Post::find($request->post_id);
         //return $post;
-        // $this->authorize('isOwner', $post);
-
+        $this->authorize('isOwner', $post);
         $post->delete();
         $this->store($request);
     }
@@ -74,8 +73,7 @@ class PostController extends Controller
      */
     public function destroy(Request $request)
     {
-
-        $post = Post::find($request->id);
+        $post = Post::find($request->post_id);
         $post->delete();
     }
 

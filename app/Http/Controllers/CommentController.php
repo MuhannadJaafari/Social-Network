@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NewCommentRequest;
 use App\Models\Comment;
+use App\Models\Hashtag;
 use App\Models\Photo;
 use App\Models\Post;
 use App\Models\Users\User;
@@ -10,56 +12,25 @@ use App\Models\Video;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $comment = new Comment;
         $post = Post::find($request->post_id);
         $comment->user_id = auth()->user()->getAuthIdentifier();
-        $comment->post_id = $request->post_id;
         $comment->text_body = $request->text_body;
-
-        $comment->save();
-
-        if ($request->photo_url) {
-            $photo = new Photo();
-            $photo->url = $request->photo_url;
-            $comment->photo()->save($photo);
-        } else if ($request->video_url) {
-            $video = new Video();
-            $video->url = $request->video_url;
-            $comment->video()->save($video);
-        }
-        return \response()->json(['done']);
+        $post->comments()->save($comment);
+        $this->storePhoto($request, $comment);
+        $this->storeVideo($request, $comment);
+        $this->storeHashtags($request, $comment);
     }
 
     /**
@@ -79,50 +50,36 @@ class CommentController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @return Response
-     */
-    public function edit()
-    {
-
-    }
-
-    /**
      * Update the specified resourcze in storage.
      *
      * @param Request $request
-     * @return JsonResponse
      * @throws AuthorizationException
      */
-    public function update(Request $request): JsonResponse
+    public function update(Request $request)
     {
-        $comment = Comment::find($request->id);
+        $comment = Comment::find($request->comment_id);
         $this->authorize('isOwner', $comment);
-        $comment->text_body = $request->text_body;
-        $comment->update();
-        return \response()->json(['done']);
+        $comment->delete();
+        $this->store($request);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Request $request
-     * @return JsonResponse
      * @throws AuthorizationException
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(Request $request)
     {
         $comment = Comment::find($request->comment_id);
         $this->authorize('isOwner', $comment);
         $comment->delete();
-        return response()->json(['done']);
     }
 
     public function getComments(Request $request)
     {
         //todo know how $comment->photo works
-        $post = Post::find($request->id);
+        $post = Post::findOrFail($request->post_id);
         $comments = $post->comments()->simplePaginate(10);
         foreach ($comments as $comment) {
             $comment->photo;
@@ -133,24 +90,55 @@ class CommentController extends Controller
 
     public function reply(Request $request)
     {
-        $comment = Comment::find($request->comment_id);
+        $comment = Comment::findOrFail($request->comment_id);
+        $post = Post::findOrFail($request->post_id);
         $user = User::find(auth()->user()->getAuthIdentifier());
         $reply = new Comment();
+
         $reply->reply = true;
         $reply->text_body = $request->text_body;
         $reply->user_id = $user->id;
-        $reply->post_id = $comment->post_id;
-        $reply->save();
 
-        $reply->replies()->save($comment);
-        if ($request->photo_url) {
-            $photo = new Photo();
-            $photo->url = $request->photo_url;
-            $reply->photo()->save($photo);
-        } else if ($request->video_url) {
-            $video = new Video();
-            $video->url = $request->video_url;
-            $reply->video()->save($video);
+        $post->save($reply);
+        $comment->replies()->save($reply);
+
+        $this->storePhoto($request, $reply);
+        $this->storeVideo($request, $reply);
+        $this->storeHashtags($request, $reply);
+    }
+
+
+    private function storePhoto(Request $request, Comment $comment)
+    {
+        if (!$request->photos) {
+            return;
+        }
+        $newPhoto = new Photo();
+        $newPhoto->url = $request->photo->store('commentPhoto');
+        $comment->photo()->save($newPhoto);
+    }
+
+    private function storeVideo(Request $request, Comment $comment)
+    {
+        if (!$request->videos) {
+            return;
+        }
+        $newVideo = new Video();
+        $newVideo->url = $request->video->store('commentVideo');
+        $comment->video()->save($newVideo);
+    }
+
+    private function storeHashtags(Request $request, Comment $comment)
+    {
+        if (!$request->hashtags) {
+            return;
+        }
+        foreach ($request->hashtags as $hashtag) {
+            $newHashtag = Hashtag::where('name', '=', $hashtag)->first();
+            if (!$newHashtag) {
+                $newHashtag = Hashtag::create(['name' => $hashtag]);
+            }
+            $comment->hashtags()->save($newHashtag);
         }
     }
 }

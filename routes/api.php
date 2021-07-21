@@ -4,8 +4,6 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RelationController;
 use App\Http\Controllers\SearchController;
-use App\Models\Comment;
-use App\Models\Like;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -26,9 +24,6 @@ use App\Http\Controllers\PhotoController;
 |
 */
 
-Route::post('/test', [PostController::class, 'test']);
-
-
 //public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -48,6 +43,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('user')->group(function () {
         Route::post('/posts', [PostController::class, 'getPosts']);
         Route::post('/timeline', [PostController::class, 'getTimeline']);
+        Route::post('/deactivate', [UserController::class, 'destroy']);
+        Route::post('/update', [UserController::class, 'update']);
     });
 
     Route::prefix('relation')->group(function () {
@@ -67,18 +64,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/delete', [PostController::class, 'destroy']);
         Route::post('/comments', [CommentController::class, 'getComments']);
         Route::post('/likes', [LikeController::class, 'getLikes']);
+        Route::post('/newLike', [LikeController::class, 'store']);
+        Route::post('/unLike', [LikeController::class, 'destroy']);
+        Route::post('/newComment', [CommentController::class, 'store']);
+        Route::post('/updateComment', [CommentController::class, 'update']);
+        Route::post('/deleteComment', [CommentController::class, 'destroy']);
     });
 
     Route::post('/search', [SearchController::class, 'search']);
 
-    Route::delete('/deactivate', [UserController::class, 'destroy']);
-    Route::post('/update', [UserController::class, 'update']);
 
-    Route::post('/newComment', [CommentController::class, 'store']);
-    Route::put('/updateComment', [CommentController::class, 'update']);
-    Route::delete('/deleteComment', [CommentController::class, 'destroy']);
-    Route::post('newHashtag', [HashtagController::class, 'store']);
-    Route::post('newLike', [LikeController::class, 'store']);
+//    Route::post('newHashtag', [HashtagController::class, 'store']);
+
     Route::delete('deleteLike', [LikeController::class, 'destroy']);
     Route::get('/newsFeed/getPosts ', [UserController::class, 'newsFeed']);
     Route::post('/{post}/viewed', [PostController::class, 'viewPost']);//for newsFeed algo
