@@ -7,7 +7,6 @@ use App\Models\Conversation;
 use App\Models\Group;
 use App\Models\Page;
 use App\Models\Post;
-use App\Models\Reply;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticate;
 use Illuminate\Notifications\Notifiable;
@@ -41,7 +40,6 @@ class User extends Authenticate
         'email_verified_at',
         'updated_at',
         'created_at',
-        'pivot'
     ];
 
     /**
@@ -68,13 +66,19 @@ class User extends Authenticate
         return $this->hasOne(Address::class, 'user_id');
     }
 
-    public function relationUser()
+    public function relationUser($id1,$id2)
     {
-        $relation = $this->belongsToMany(User::class, 'relation_user', 'user2_id', 'user1_id')->withPivot('relation');
-        if ($relation->count()) {
-            return $relation;
-        }
-        return $this->belongsToMany(User::class, 'relation_user', 'user1_id', 'user2_id')->withPivot('relation');
+//        SELECT users.id,relation_user.user2_id FROM `users`
+//INNER join relation_user
+//on users.id = relation_user.user1_id;
+
+//        $relation =
+//            return $this->belongsToMany(User::class, 'relation_user', 'user1_id', 'user2_id')->withPivot('relation');
+        return $this->belongsToMany(User::class, 'relation_user', $id1, $id2)->withPivot('relation','blocker');
+//        if ($relation->count()) {
+//            return $relation;
+//        }
+//        return $this->belongsToMany(User::class, 'relation_user', 'user1_id', 'user2_id')->withPivot('relation');
     }
 
     public function conversationas(): HasMany
@@ -94,7 +98,7 @@ class User extends Authenticate
 
     public function pages()
     {
-        return $this->belongsToMany(Page::class,'page_user');
+        return $this->belongsToMany(Page::class, 'page_user');
     }
 
     public function groups()

@@ -79,22 +79,25 @@ class PostController extends Controller
 
     public function getPosts(Request $request, $id = null)
     {
-        $id = $id === null ? $request->id : $id;
+        $id = $id === null ? auth()->user()->getAuthIdentifier() : $id;
         $user = User::find($id);
         $posts = $user->posts()->simplePaginate(3);
         foreach ($posts as $post) {
             $post->photos;
             $post->videos;
+            $post->hashtags;
         }
         return $posts;
     }
 
     public function getTimeline(Request $request)
     {
-        $user = User::find($request->id);
-        $friends = $user->relations()->wherePivot('relation', '=', 'friends')->get();
+        $user = User::find(auth()->user()->getAuthIdentifier());
+        $friends = $user->relationUser('user2_id', 'user1_id')->wherePivot('relation', '=', 'friends');
+        $friends2 = $user->relationUser('user1_id', 'user2_id')->wherePivot('relation', '=', 'friends');
         $arr = array();
-        foreach ($friends as $friend) {
+        $collection_of_friends = $this->helper->mergeObjects($friends, $friends2);
+        foreach ($collection_of_friends as $friend) {
             foreach ($friend->posts as $post) {
                 $post->photos;
                 $post->videos;

@@ -8,6 +8,7 @@ use App\Models\Users\Username;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Post;
@@ -23,4 +24,9 @@ use App\Models\Users\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/', function () {
+    $user = User::find(2);
+    DB::enableQueryLog();
+   dd( $user->relationUser()->get());
+//    dd(DB::getQueryLog());
+});

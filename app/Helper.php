@@ -28,4 +28,18 @@ class Helper
         $items = $items instanceof \Illuminate\Database\Eloquent\Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
+
+    public function mergeObjects($obj1,$obj2){
+        $collection = new Collection();
+        foreach($obj1->get() as $item){
+            $collection->push($item->makeHidden(['pivot','birth_date']));
+        }
+
+
+        foreach($obj2->get() as $item){
+            $collection->push($item->makeHidden(['pivot','birth_date']));
+        }
+
+        return $collection;
+    }
 }

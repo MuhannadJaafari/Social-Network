@@ -27,21 +27,30 @@ UserPolicy
 
     public function canViewUser(User $currentUser, User $targetUser)
     {
-        $relation = $currentUser->relations()
-            ->where('user1_id', '=', $targetUser->id)
-            ->orWhere('user2_id', '=', $targetUser->id)
-            ->first();
+        $relation = $currentUser->relationUser('user2_id', 'user1_id')->where('user1_id', '=', $targetUser->id)->first();
+        if (!$relation) {
+            $relation = $currentUser->relationUser('user1_id', 'user2_id')->where('user2_id', '=', $targetUser->id)->first();
+        }
         if (!$relation)
             return true;
         $relation = $relation->pivot;
         return $relation->relation != 'blocked';
     }
-    public function canUnblock(User $currentUser, User $targetUser){
-        $relation = $currentUser->relations()
-            ->where('user1_id', '=', $targetUser->id)
-            ->orWhere('user2_id', '=', $targetUser->id)
-            ->withPivot('blocker')
-            ->first()->pivot;
+
+    public function canUnblock(User $currentUser, User $targetUser)
+    {
+        $relation = $currentUser->relationUser('user2_id', 'user1_id')->where('user1_id', '=', $targetUser->id)->first();
+        if (!$relation) {
+            $relation = $currentUser->relationUser('user1_id', 'user2_id')->where('user2_id', '=', $targetUser->id)->first();
+        }
+        if (!$relation)
+            return false;
+        $relation = $relation->pivot;
         return $relation->blocker === $currentUser->id;
+    }
+
+    public function canBlock(User $currentUser, User $targetUser)
+    {
+        return $currentUser->id !== $targetUser->id;
     }
 }
