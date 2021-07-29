@@ -24,6 +24,7 @@ class PostController extends Controller
 
         $user = User::find(auth()->user()->getAuthIdentifier());
         $post = new Post();
+        $this->insertInfo($post,$request);
         $post->text_body = $request->text_body;
         $post = $user->posts()->save($post);
         $this->storeHashTags($request, $post);
@@ -61,8 +62,8 @@ class PostController extends Controller
         $post = Post::find($request->post_id);
         //return $post;
         $this->authorize('isOwner', $post);
-        $post->delete();
-        $this->store($request);
+        $this->deleteElements($request->deleted,$post);
+        $this->insertInfo($post,$request);
     }
 
     /**
@@ -155,5 +156,8 @@ class PostController extends Controller
             }
             $post->hashtags()->save($newHashtag);
         }
+    }
+    private function insertInfo($post,$request){
+
     }
 }
