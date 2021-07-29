@@ -12,38 +12,7 @@ use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
-    public function index()
-    {
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $user = User::create($request->all());
-        $user->save();
-    }
 
     /**
      * Display the specified resource.
@@ -104,8 +73,7 @@ class UserController extends Controller
      */
     public function destroy()
     {
-        $id = auth()->user()->id;
-        $user = User::find($id);
+        $user = User::find(auth()->user()->getAuthIdentifier());
         $user->delete();
     }
 
@@ -113,12 +81,6 @@ class UserController extends Controller
     {
         $user = User::find($id);
         return response()->json($user->post());
-    }
-
-    public function getFriends($id)
-    {
-        $user = User::find($id);
-        return response()->json($user->relations());
     }
 
     public function newsFeed()

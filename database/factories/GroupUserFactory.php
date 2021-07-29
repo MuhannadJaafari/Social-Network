@@ -22,9 +22,9 @@ class GroupUserFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'=>rand(1,5),
-            'group_id'=>rand(1,10),
-            'role'=>'member'
+            'user_id' => rand(1, 5),
+            'group_id' => rand(1, 10),
+            'role' => 'member'
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\GroupDeleteEvent;
 use App\Models\Users\User;
 use App\Models\Users\Username;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,6 +12,9 @@ class Group extends Model
 {
     use HasFactory;
 
+    protected $dispatchesEvents = [
+        'deleting' => GroupDeleteEvent::class
+    ];
     public function users()
     {
         return $this->belongsToMany(User::class);

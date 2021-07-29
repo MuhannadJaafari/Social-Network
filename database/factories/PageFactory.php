@@ -23,7 +23,7 @@ class PageFactory extends Factory
     {
         return [
             'name' => $this->faker->name." Page",
-            'creator_id'=>rand(1, 5)
+            'creator_id'=>rand(1,5)
         ];
     }
 }

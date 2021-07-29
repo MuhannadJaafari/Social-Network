@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Events\PostAfterDeletingEvent;
 use App\Events\PostDeletedEvent;
-use http\Exception\RuntimeException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

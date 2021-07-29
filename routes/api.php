@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('user')->group(function () {
+        Route::post('/profilePage',[UserController::class,'show']);
         Route::post('/posts', [PostController::class, 'getPosts']);
         Route::post('/timeline', [PostController::class, 'getTimeline']);
         Route::post('/deactivate', [UserController::class, 'destroy']);//todo event to destroy all posts and activities
@@ -77,7 +78,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 //    Route::post('newHashtag', [HashtagController::class, 'store']);
 
-    Route::post('/{post}/viewed', [PostController::class, 'viewPost']);//for newsFeed algo
+//    Route::post('/{post}/viewed', [PostController::class, 'viewPost']);//for newsFeed algo
     Route::put('/updateProfilePic', [PhotoController::class, 'updateProfilePic']);
     Route::delete('/deleteProfilePic', [PhotoController::class, 'deleteProfilePic']);
     Route::get('/{user}', [UserController::class, 'show']);

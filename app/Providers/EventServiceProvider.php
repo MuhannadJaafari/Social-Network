@@ -3,9 +3,15 @@
 namespace App\Providers;
 
 use App\Events\CommentDeletedEvent;
+use App\Events\GroupDeleteEvent;
+use App\Events\PageDeletedEvent;
 use App\Events\PostDeletedEvent;
+use App\Events\UserDeletedEvent;
 use App\Listeners\CheckHashtagTable;
 use App\Listeners\CommentDeleteRelations;
+use App\Listeners\DeleteGroupFromPivotListener;
+use App\Listeners\DeletePageFromPivotListener;
+use App\Listeners\DeleteUserListener;
 use App\Listeners\PostDeleteRelations;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -29,7 +35,17 @@ class EventServiceProvider extends ServiceProvider
         CommentDeletedEvent::class => [
             CommentDeleteRelations::class,
             CheckHashtagTable::class
+        ],
+        UserDeletedEvent::class => [
+            DeleteUserListener::class
+        ],
+        GroupDeleteEvent::class => [
+            DeleteGroupFromPivotListener::class
+        ],
+        PageDeletedEvent::class => [
+            DeletePageFromPivotListener::class
         ]
+
     ];
 
     /**

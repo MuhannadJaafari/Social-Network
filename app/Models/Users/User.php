@@ -2,6 +2,7 @@
 
 namespace App\Models\Users;
 
+use App\Events\UserDeletedEvent;
 use App\Models\Comment;
 use App\Models\Conversation;
 use App\Models\Group;
@@ -40,6 +41,9 @@ class User extends Authenticate
         'email_verified_at',
         'updated_at',
         'created_at',
+    ];
+    protected $dispatchesEvents = [
+        'deleting'=>UserDeletedEvent::class
     ];
 
     /**
@@ -81,7 +85,7 @@ class User extends Authenticate
 //        return $this->belongsToMany(User::class, 'relation_user', 'user1_id', 'user2_id')->withPivot('relation');
     }
 
-    public function conversationas(): HasMany
+    public function conversations(): HasMany
     {
         $relation = $this->hasMany(Conversation::class, 'user1_id')->where('user1_id', '=', $this->id);
         if ($relation->count()) {
@@ -89,11 +93,6 @@ class User extends Authenticate
         }
         return $this->hasMany(Conversation::class, 'user2_id')->where('user2_id', '=', $this->id);
 
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
     }
 
     public function pages()
