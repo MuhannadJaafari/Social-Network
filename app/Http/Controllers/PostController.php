@@ -65,7 +65,8 @@ class PostController extends Controller
         //return $post;
         $this->authorize('isOwner', $post);
         $post->text_body=$request->text_body;
-        foreach ($request->deleted_photos as $photo){
+        foreach ($request->deleted_photos as $id){
+            $photo=Photo::find($id);
             $photo->delete();
         }
 //        foreach ($request->added_photos as $photourl){
@@ -74,7 +75,8 @@ class PostController extends Controller
 //            $post->photos()->save($photo);
 //        }
         $this->storePhotos($request,$post);
-        foreach ($request->deleted_videos as $video){
+        foreach ($request->deleted_videos as $id){
+            $video=Video::find($id);
             $video->delete();
         }
 //        foreach ($request->added_videos as $videourl){
