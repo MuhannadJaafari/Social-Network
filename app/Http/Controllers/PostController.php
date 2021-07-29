@@ -7,7 +7,10 @@ use App\Models\Photo;
 use App\Models\Post;
 use App\Models\Users\User;
 use App\Models\Video;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PostController extends Controller
 {
@@ -16,8 +19,8 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -30,18 +33,17 @@ class PostController extends Controller
         $this->storeHashTags($request, $post);
         $this->storePhotos($request->instance(), $post);
         $this->storeVideos($request->instance(), $post);
-
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        $post = Post::find($id);
+        $post = Post::find($request->id);
         return response()->json(
             ['post_text' => $post->text(),
                 'post_images_url' => [$post->photos()->url()],
@@ -52,9 +54,9 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
+     * @throws AuthorizationException
      */
     public function update(Request $request)
     {
@@ -62,15 +64,33 @@ class PostController extends Controller
         $post = Post::find($request->post_id);
         //return $post;
         $this->authorize('isOwner', $post);
-        $this->deleteElements($request->deleted,$post);
-        $this->insertInfo($post,$request);
+        $post->text_body=$request->text_body;
+        foreach ($request->deleted_photos as $photo){
+            $photo->delete();
+        }
+//        foreach ($request->added_photos as $photourl){
+//            $photo = new Photo();
+//            $photo->url=$photourl;
+//            $post->photos()->save($photo);
+//        }
+        $this->storePhotos($request,$post);
+        foreach ($request->deleted_videos as $video){
+            $video->delete();
+        }
+//        foreach ($request->added_videos as $videourl){
+//            $video=new Video();
+//            $video->url=$videourl;
+//            $post->videos()->save($video);
+//        }
+        $this->storeVideos($request,$post);
+        $post->save();
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Request $request)
     {
