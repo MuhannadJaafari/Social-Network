@@ -17,7 +17,8 @@ class CreatePhotosTable extends Migration
             $table->id();
             $table->morphs('photoable');
             $table->string('url');
-            $table->string('photo_type');
+            $table->string('photo_type')->nullable();
+            $table->boolean('current')->nullable();
             $table->timestamps();
         });
     }

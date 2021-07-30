@@ -7,6 +7,7 @@ use App\Models\Comment;
 use App\Models\Conversation;
 use App\Models\Group;
 use App\Models\Page;
+use App\Models\Photo;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticate;
@@ -103,6 +104,9 @@ class User extends Authenticate
     public function groups()
     {
         return $this->belongsToMany(Group::class, 'group_user');
+    }
+    public function photo(){
+        return $this->morphMany(Photo::class,'photoable');
     }
 
 }
