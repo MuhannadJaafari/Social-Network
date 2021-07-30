@@ -65,16 +65,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/update', [PostController::class, 'update']);
         Route::post('/delete', [PostController::class, 'destroy']);
         Route::post('/comments', [CommentController::class, 'getComments']);
-        Route::post('/likes', [LikeController::class, 'getLikes']);
-        Route::post('/newLike', [LikeController::class, 'store']);
-        Route::post('/unLike', [LikeController::class, 'destroy']);
         Route::post('/newComment', [CommentController::class, 'store']);
         Route::post('/updateComment', [CommentController::class, 'update']);
         Route::post('/deleteComment', [CommentController::class, 'destroy']);
     });
-
     Route::post('/search', [SearchController::class, 'search']);
-
+    Route::post('/likes', [LikeController::class, 'getLikes']);
+    Route::post('/newLike', [LikeController::class, 'store']);
+    Route::post('/unLike', [LikeController::class, 'destroy']);
 
 //    Route::post('newHashtag', [HashtagController::class, 'store']);
 

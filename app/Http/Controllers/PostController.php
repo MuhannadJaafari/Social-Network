@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hashtag;
+use App\Models\Like;
 use App\Models\Photo;
 use App\Models\Post;
 use App\Models\Users\User;
@@ -179,7 +180,5 @@ class PostController extends Controller
             $post->hashtags()->save($newHashtag);
         }
     }
-    private function insertInfo($post,$request){
 
-    }
 }

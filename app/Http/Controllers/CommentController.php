@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NewCommentRequest;
 use App\Models\Comment;
 use App\Models\Hashtag;
+use App\Models\Like;
 use App\Models\Photo;
 use App\Models\Post;
 use App\Models\Users\User;
