@@ -39,9 +39,9 @@ class CommentController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show($id): JsonResponse
+    public function show(Request $request): JsonResponse
     {
-        $comment = Comment::find($id);
+        $comment = Comment::find($request->id);
         return response()->json([
             'comment_text' => $comment->text(),
             'comment_photo_url' => $comment->photo()->url(),
@@ -59,8 +59,22 @@ class CommentController extends Controller
     {
         $comment = Comment::find($request->comment_id);
         $this->authorize('isOwner', $comment);
-        $comment->delete();
-        $this->store($request);
+        if($request->text_body){
+            $comment->text_body=$request->text_body;
+        }
+        if($request->deleted_photo_id){
+            $photo=Photo::find($request->deleted_photo_id);
+            $photo->delete();
+        }
+        if($request->deleted_video_id)
+        {
+            $video=Video::find($request->deleted_video_id);
+            $video->delete();
+        }
+        $this->storePhoto($request,$comment);
+        $this->storeVideo($request,$comment);
+        $comment->update();
+
     }
 
     /**
