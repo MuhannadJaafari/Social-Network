@@ -4,6 +4,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RelationController;
 use App\Http\Controllers\SearchController;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -35,7 +36,7 @@ Route::post('/login', [AuthController::class, 'login']);
 //Route::get('{post_id}/sharers', [PostController::class, 'getSharers']);
 //protected routes
 Route::get('/',function(){
-   event(new \App\Events\SendMessageEvent('hiii'));
+   event(new \App\Events\SendMessageEvent(User::find(1),'hi dude'));
 });
 Route::group(['middleware' => ['auth:sanctum']], function () {
 

@@ -17,11 +17,6 @@ class CreateRepliesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('reply_id');
             $table->unsignedBigInteger('comment_id');
-
-        });
-        Schema::table('replies',function (Blueprint $table){
-            $table->foreign('reply_id')->references('id')->on('comments');
-            $table->foreign('comment_id')->references('id')->on('comments');
         });
     }
 
