@@ -28,7 +28,6 @@ class PostController extends Controller
 
         $user = User::find(auth()->user()->getAuthIdentifier());
         $post = new Post();
-        $this->insertInfo($post,$request);
         $post->text_body = $request->text_body;
         $post = $user->posts()->save($post);
         $this->storeHashTags($request, $post);
