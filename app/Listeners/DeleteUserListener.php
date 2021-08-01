@@ -50,5 +50,8 @@ class DeleteUserListener
         foreach (Page::where('creator_id', '=', $user->id)->get() as $page) {
             $page->delete();
         }
+        foreach($user->photo as $photo){
+            $photo->delete();
+        }
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Http\Requests\NewCommentRequest;
 use App\Models\Comment;
 use App\Models\Hashtag;
 use App\Models\Like;
@@ -58,24 +56,7 @@ class CommentController extends Controller
      */
     public function update(Request $request)
     {
-        $comment = Comment::find($request->comment_id);
-        $this->authorize('isOwner', $comment);
-        if($request->text_body){
-            $comment->text_body=$request->text_body;
-        }
-        if($request->deleted_photo_id){
-            $photo=Photo::find($request->deleted_photo_id);
-            $photo->delete();
-        }
-        if($request->deleted_video_id)
-        {
-            $video=Video::find($request->deleted_video_id);
-            $video->delete();
-        }
-        $this->storePhoto($request,$comment);
-        $this->storeVideo($request,$comment);
-        $comment->update();
-
+        $this->updateComment($request->comment_id, $request);
     }
 
     /**
@@ -114,7 +95,7 @@ class CommentController extends Controller
         $reply->text_body = $request->text_body;
         $reply->user_id = $user->id;
 
-        $post->save($reply);
+        $post->comments()->save($reply);
         $comment->replies()->save($reply);
 
         $this->storePhoto($request, $reply);
@@ -122,10 +103,14 @@ class CommentController extends Controller
         $this->storeHashtags($request, $reply);
     }
 
+    public function updateReply(Request $request)
+    {
+        $this->updateComment($request->reply_id, $request);
+    }
 
     private function storePhoto(Request $request, Comment $comment)
     {
-        if (!$request->photos) {
+        if (!$request->photo) {
             return;
         }
         $newPhoto = new Photo();
@@ -135,7 +120,7 @@ class CommentController extends Controller
 
     private function storeVideo(Request $request, Comment $comment)
     {
-        if (!$request->videos) {
+        if (!$request->video) {
             return;
         }
         $newVideo = new Video();
@@ -155,5 +140,26 @@ class CommentController extends Controller
             }
             $comment->hashtags()->save($newHashtag);
         }
+    }
+
+    private function updateComment($id, Request $request)
+    {
+        $comment = Comment::find($id);
+        $this->authorize('isOwner', $comment);
+        if ($request->text_body) {
+            $comment->text_body = $request->text_body;
+        }
+        if ($request->deleted_photo_id) {
+            $photo = Photo::find($request->deleted_photo_id);
+            $photo->delete();
+        }
+        if ($request->deleted_video_id) {
+            $video = Video::find($request->deleted_video_id);
+            $video->delete();
+        }
+        $this->storePhoto($request, $comment);
+        $this->storeVideo($request, $comment);
+        $this->storeHashtags($request, $comment);
+        $comment->update();
     }
 }
