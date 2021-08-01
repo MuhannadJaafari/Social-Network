@@ -24,9 +24,4 @@ use App\Models\Users\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    $user = User::find(2);
-    DB::enableQueryLog();
-   dd( $user->relationUser()->get());
-//    dd(DB::getQueryLog());
-});
+
