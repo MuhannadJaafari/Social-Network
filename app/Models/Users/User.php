@@ -36,7 +36,6 @@ class User extends Authenticate
      * @var array
      */
     protected $hidden = [
-        'email',
         'password',
         'remember_token',
         'email_verified_at',
