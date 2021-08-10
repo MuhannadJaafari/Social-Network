@@ -21,15 +21,24 @@ class RelationUserFactory extends Factory
      */
     public function definition()
     {
-        $firstValue = rand(1, 5);
-        $secondValue = rand(1, 5);
-        while ($secondValue == $firstValue) {
-            $secondValue = rand(1, 5);
-        }
-        return [
-            'user1_id' => $firstValue,
-            'user2_id' => $secondValue,
-            'relation'=>'friends'
-        ];
+//        $firstValue = rand(1, 5);
+//        $secondValue = rand(1, 5);
+//        while ($secondValue == $firstValue) {
+//            $secondValue = rand(1, 5);
+//        }
+//        while (true){
+//            $r = RelationUser::where('user1_id', $firstValue)->where('user2_id', $secondValue)->first();
+//            if ($r) continue;
+//            else {
+//                $r = RelationUser::where('user2_id', $firstValue)->where('user1_id', $secondValue)->first();
+//                if ($r) continue;
+//                else break;
+//            }
+//        }
+//        return [
+//            'user1_id' => $firstValue,
+//            'user2_id' => $secondValue,
+//            'relation' => 'friends'
+//        ];
     }
 }
