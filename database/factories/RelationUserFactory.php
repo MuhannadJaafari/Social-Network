@@ -28,7 +28,8 @@ class RelationUserFactory extends Factory
         }
         return [
             'user1_id' => $firstValue,
-            'user2_id' => $secondValue
+            'user2_id' => $secondValue,
+            'relation'=>'friends'
         ];
     }
 }
