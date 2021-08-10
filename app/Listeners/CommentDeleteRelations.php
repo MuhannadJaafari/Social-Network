@@ -17,6 +17,7 @@ class CommentDeleteRelations
     public function handle(CommentDeletedEvent $event)
     {
         $comment = $event->comment;
+//        $comment->likes()-
 //        foreach ($comment->likes()->get() as $like) {
 //            $like->delete();
 //        }

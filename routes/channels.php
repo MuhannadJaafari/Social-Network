@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 //
-Broadcast::channel('message.1', function ($user, $id) {
+Broadcast::channel('message', function ($user, $id) {
     return true;
 });
 

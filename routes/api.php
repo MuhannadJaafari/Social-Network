@@ -36,7 +36,7 @@ Route::post('/login', [AuthController::class, 'login']);
 //Route::get('{post_id}/sharers', [PostController::class, 'getSharers']);
 //protected routes
 Route::get('/',function(){
-   event(new \App\Events\SendMessageEvent(User::find(1),'hi dude'));
+   event(new \App\Events\SendMessageEvent('hi dude'));
 });
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
