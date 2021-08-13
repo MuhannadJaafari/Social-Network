@@ -17,8 +17,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/scout": "^9.2",
         "laravel/tinker": "^2.5",
-        "meilisearch/meilisearch-php": "^0.18.3",
-        "pusher/pusher-php-server": "^7.0"
+        "meilisearch/meilisearch-php": "^0.18.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

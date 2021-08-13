@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             HashtagUserSeeder::class,
             PageUserSeeder::class,
             GroupUserSeeder::class,
+            LikeSeeder::class
         ]);
     }
 }

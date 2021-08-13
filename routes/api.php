@@ -81,7 +81,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/search', [SearchController::class, 'search']);
 
-
+ Route::post('/likeComment',[CommentController::class,'like']);
 //    Route::post('newHashtag', [HashtagController::class, 'store']);
 
 //    Route::post('/{post}/viewed', [PostController::class, 'viewPost']);//for newsFeed algo

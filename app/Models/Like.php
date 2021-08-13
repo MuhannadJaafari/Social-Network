@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Like extends Model
 {
@@ -20,5 +21,6 @@ class Like extends Model
     {
         return $this->morphTo();
     }
+
 
 }

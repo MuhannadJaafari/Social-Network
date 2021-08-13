@@ -37,9 +37,6 @@ class UserSeeder extends Seeder
                 ->has(Comment::factory()->count(20)->state(function (array $attributes, Post $post) {
                     return ['user_id' => $post['postable_id']];
                 }))
-                ->has(Like::factory()->count(10)->state(function (array $attributes, Post $post) {
-                    return ['user_id' => $post['postable_id']];
-                }))
                 ->has(Photo::factory()->count(rand(1, 4)))
                 ->has(Video::factory()->count(rand(1, 4)))
                 ->count(5)

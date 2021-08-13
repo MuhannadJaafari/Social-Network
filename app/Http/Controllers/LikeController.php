@@ -17,11 +17,11 @@ class LikeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   if($request->post_id){
-        $liked = Post::findOrFail($request->post_id);}
-        else if($request->comment_id)
-        {
-            $liked= Comment::findOrFail($request->comment_id);
+    {
+        if ($request->post_id) {
+            $liked = Post::findOrFail($request->post_id);
+        } else if ($request->comment_id) {
+            $liked = Comment::findOrFail($request->comment_id);
         }
         $like = new Like();
         $like->user_id = auth()->user()->getAuthIdentifier();
@@ -35,23 +35,22 @@ class LikeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
-    {   if($request->post_id)
     {
-        $deleted = Post::find($request->post_id);
-       }
-        else if ($request->comment_id)
-        {
+        if ($request->post_id) {
+            $deleted = Post::find($request->post_id);
+        } else if ($request->comment_id) {
             $deleted = Comment::find($request->comment_id);
         }
-        $like = $deleted->likes()->where('user_id','=',auth()->user()->getAuthIdentifier())->first();
+       $like=$deleted->likes()->where('user_id', '=', auth()->user()->getAuthIdentifier())->first();
         $like->delete();
     }
 
     public function getLikes(Request $request)
-    {   if($request->post_id){
-        $liked = Post::findOrFail($request->post_id);}
-        else if($request->comment_id){
-            $liked= Comment::findOrFail($request->comment_id);
+    {
+        if ($request->post_id) {
+            $liked = Post::findOrFail($request->post_id);
+        } else if ($request->comment_id) {
+            $liked = Comment::findOrFail($request->comment_id);
         }
         return $liked->likes()->simplePaginate(10);
     }
