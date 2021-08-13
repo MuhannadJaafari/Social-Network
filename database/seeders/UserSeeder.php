@@ -31,7 +31,6 @@ class UserSeeder extends Seeder
 //            dd($user);
 //        })->create();
 
-
         User::factory()
             ->count(5)
             ->has(Post::factory()

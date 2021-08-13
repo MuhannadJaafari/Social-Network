@@ -15,10 +15,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use \Illuminate\Database\Eloquent\Relations\HasMany as HasMany;
 use \Illuminate\Database\Eloquent\Relations\HasOne as HasOne;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticate
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens,Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -36,7 +37,6 @@ class User extends Authenticate
      * @var array
      */
     protected $hidden = [
-        'email',
         'password',
         'remember_token',
         'email_verified_at',

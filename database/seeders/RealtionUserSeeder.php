@@ -14,6 +14,15 @@ class RealtionUserSeeder extends Seeder
      */
     public function run()
     {
-        RelationUser::factory()->count(10)->create();
+
+        for ($i = 1; $i <= 5; $i++) {
+            for($j = $i+1;$j<=5;$j++){
+                RelationUser::create([
+                    'user1_id'=>$i,
+                    'user2_id'=>$j,
+                    'relation'=>'friends'
+                ]);
+            }
+        }
     }
 }

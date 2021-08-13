@@ -17,12 +17,39 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 // import Echo from 'laravel-echo';
-
+//
 // window.Pusher = require('pusher-js');
-
+//
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
 //     key: process.env.MIX_PUSHER_APP_KEY,
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+// var pusher = new Pusher('API_KEY_HERE', {
+//     encrypted: true
+// });
+//
+// // Subscribe to the channel we specified in our Laravel Event
+// var channel = pusher.subscribe('status-liked');
+//
+// // Bind a function to a Event (the full Laravel class)
+// channel.bind('App\\Events\\StatusLiked', function(data) {
+//     // this is called when the event notification is received...
+// });
+// import Pusher from "pusher-js"
+// // Enable pusher logging - don't include this in production
+// Pusher.logToConsole = true;
+//
+// var pusher = new Pusher('1e567bfd239edc66230b', {
+//     // encrypted: true;
+//     cluster: 'us3'
+// });
+//
+// // Subscribe to the channel we specified in our Laravel Event
+// var channel = pusher.subscribe('message');
+//
+// // Bind a function to a Event (the full Laravel class)
+// channel.bind('App\\Events\\SendMessageEvent', function (data) {
+//     console.log(data);
+// })

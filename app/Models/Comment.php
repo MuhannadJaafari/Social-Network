@@ -39,7 +39,7 @@ class Comment extends Model
 
     public function replies()
     {
-        return $this->belongsToMany(Comment::class, 'replies', 'reply_id', 'comment_id');
+        return $this->belongsToMany(Comment::class, 'replies', 'comment_id', 'reply_id');
     }
 
     public function hashtags()

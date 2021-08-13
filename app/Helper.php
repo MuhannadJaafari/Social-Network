@@ -35,7 +35,6 @@ class Helper
             $collection->push($item->makeHidden(['pivot','birth_date']));
         }
 
-
         foreach($obj2->get() as $item){
             $collection->push($item->makeHidden(['pivot','birth_date']));
         }

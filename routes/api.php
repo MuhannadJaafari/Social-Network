@@ -4,7 +4,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RelationController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\VideoContoller;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -35,7 +35,10 @@ Route::post('/login', [AuthController::class, 'login']);
 //Route::get('{post_id}/likes', [PostController::class, 'getLikes']);
 //Route::get('{post_id}/sharers', [PostController::class, 'getSharers']);
 //protected routes
-
+Route::get('/',function(){
+    return User::all();
+//   event(new \App\Events\SendMessageEvent('hi dude'));
+});
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -44,8 +47,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/profilePage',[UserController::class,'show']);
         Route::post('/posts', [PostController::class, 'getPosts']);
         Route::post('/timeline', [PostController::class, 'getTimeline']);
-        Route::post('/deactivate', [UserController::class, 'destroy']);//todo event to destroy all posts and activities
-        Route::post('/update', [UserController::class, 'update']);//todo
+        Route::post('/deactivate', [UserController::class, 'destroy']);
+        Route::post('/update', [UserController::class, 'update']);
     });
 
     Route::prefix('relation')->group(function () {
@@ -56,8 +59,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/block', [RelationController::class, 'block']);
         Route::post('/unblock', [RelationController::class, 'unblock']);
         Route::post('/getRelation', [RelationController::class, 'getCurrentRelation']);
-        Route::post('/friendsRequests',[RelationController::class,'getFriendsRequests']);
-        Route::post('/friends',[RelationController::class,'getFriends']);
+        Route::post('/friendsRequests', [RelationController::class, 'getFriendsRequests']);
+        Route::post('/friends', [RelationController::class, 'getFriends']);
     });
 
 
@@ -66,15 +69,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/update', [PostController::class, 'update']);
         Route::post('/delete', [PostController::class, 'destroy']);
         Route::post('/comments', [CommentController::class, 'getComments']);
+        Route::post('/likes', [LikeController::class, 'getLikes']);
+        Route::post('/newLike', [LikeController::class, 'store']);
+        Route::post('/unLike', [LikeController::class, 'destroy']);
         Route::post('/newComment', [CommentController::class, 'store']);
         Route::post('/updateComment', [CommentController::class, 'update']);
-        Route::post('/deleteComment', [CommentController::class, 'destroy']);
+        Route::post('/deleteComment', [CommentController::class, 'destroy']);//todo
+        Route::post('/newReply', [CommentController::class, 'reply']);
+        Route::post('/updateReply', [CommentController::class, 'updateReply']);
     });
+
     Route::post('/search', [SearchController::class, 'search']);
-    Route::post('/likes', [LikeController::class, 'getLikes']);
-    Route::post('/newLike', [LikeController::class, 'store']);
-    Route::post('/unLike', [LikeController::class, 'destroy']);
-    Route::post('/videoViewed',[VideoContoller::class,'videoViewed']);
+
 
 //    Route::post('newHashtag', [HashtagController::class, 'store']);
 

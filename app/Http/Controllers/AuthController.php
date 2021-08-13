@@ -19,6 +19,7 @@ class AuthController extends Controller
         $request = collect($request);
         $user_info = $this->helper->filter($request, ['name', 'email', 'password', 'birth_date']);
         $user_info['password'] = bcrypt($user_info['password']);
+        $user_info['birth_date'] = '1999-14-09';
         $user = User::create($user_info);
         $user->username()->save(new Username(['name' => $this->helper->filter($request, ['username'])['username']]));
         if ($request->get('city') && $request->get('town'))
