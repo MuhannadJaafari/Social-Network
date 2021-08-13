@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Video extends Model
-{
+{ protected $fillable=['views'];
     use HasFactory;
     public $timestamps = false;
     public function videoable(){

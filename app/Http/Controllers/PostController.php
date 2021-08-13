@@ -161,6 +161,7 @@ class PostController extends Controller
         }
         foreach ($request->videos as $video) {
             $newVideo = new Video();
+            $newVideo->views=0;
             $newVideo->url = $video->store('postVideo');
             $post->videos()->save($newVideo);
         }

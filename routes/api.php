@@ -4,6 +4,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RelationController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\VideoContoller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -73,6 +74,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/likes', [LikeController::class, 'getLikes']);
     Route::post('/newLike', [LikeController::class, 'store']);
     Route::post('/unLike', [LikeController::class, 'destroy']);
+    Route::post('/videoViewed',[VideoContoller::class,'videoViewed']);
 
 //    Route::post('newHashtag', [HashtagController::class, 'store']);
 

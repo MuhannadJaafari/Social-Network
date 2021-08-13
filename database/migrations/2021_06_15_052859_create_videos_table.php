@@ -17,6 +17,7 @@ class CreateVideosTable extends Migration
             $table->id();
             $table->string('url');
             $table->morphs('videoable');
+            $table->integer('views')->nullable();
         });
     }
 

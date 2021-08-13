@@ -98,4 +98,9 @@ class VideoContoller extends Controller
         $video->delete();
         return \response()->json(['done']);
     }
+    public function videoViewed(Request $request)
+    {
+        $video = Video::find($request->video_id);
+        $video->views=$video->views+1;
+    }
 }
