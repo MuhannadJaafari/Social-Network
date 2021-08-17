@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FriendShipCreatedEvent;
 use App\Models\RelationUser;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
@@ -48,6 +49,7 @@ class RelationController extends Controller
         $relation = $relation->pivot;
         $relation->relation = 'friends';
         $relation->save();
+        FriendShipCreatedEvent::dispatch($user,User::find($request->id));
     }
 
     public function block(Request $request)
@@ -122,8 +124,8 @@ class RelationController extends Controller
     public function getFriends()
     {
         $user = User::find(auth()->user()->getAuthIdentifier());
-        $relation1 = $user->relationUser('user2_id', 'user1_id');
-        $relation2 = $user->relationUser('user1_id', 'user2_id');
+        $relation1 = $user->relationUser('user2_id', 'user1_id')->where('relation','=','friends');
+        $relation2 = $user->relationUser('user1_id', 'user2_id')->where('relation','=','friends');
         return $this->helper->mergeObjects($relation1, $relation2);
 
     }

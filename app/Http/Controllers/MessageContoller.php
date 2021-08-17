@@ -39,8 +39,12 @@ class MessageContoller extends Controller
     public function store(Request $request)
     {
 
-        $message = Message::create($request->all());
-        $message->save();
+        $message = Message::create([
+            'sender_id'=>auth()->user()->getAuthIdentifier(),
+            'conversation_id'=>$request->conversation_id,
+            'text'=>$request->text
+        ]);
+//        $message->save();
         return \response()->json(['done']);
     }
 

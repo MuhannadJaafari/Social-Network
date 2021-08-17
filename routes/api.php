@@ -95,4 +95,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/addPagePost', [PageController::class, 'addPagePost']);
     Route::post('/addGroupPost', [GroupController::class, 'addGroupPost']);
     Route::post('/addReply', [CommentController::class, 'reply']);
+
+
+    Route::post('sendMessage',[\App\Http\Controllers\MessageContoller::class,'store']);
 });

@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Events\CommentDeletedEvent;
+use App\Events\FriendShipCreatedEvent;
 use App\Events\GroupDeleteEvent;
 use App\Events\PageDeletedEvent;
 use App\Events\PostDeletedEvent;
 use App\Events\UserDeletedEvent;
 use App\Listeners\CheckHashtagTable;
 use App\Listeners\CommentDeleteRelations;
+use App\Listeners\CreateConversationListener;
 use App\Listeners\DeleteGroupFromPivotListener;
 use App\Listeners\DeletePageFromPivotListener;
 use App\Listeners\DeleteUserListener;
@@ -44,8 +46,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         PageDeletedEvent::class => [
             DeletePageFromPivotListener::class
+        ],
+        FriendShipCreatedEvent::class => [
+            CreateConversationListener::class
         ]
-
     ];
 
     /**
