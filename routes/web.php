@@ -27,3 +27,4 @@ use App\Models\Users\User;
 Route::get('/',function(){
    return view('welcome');
 });
+Route::view('forgot_passowrd','reset_password')->name('password.reset');

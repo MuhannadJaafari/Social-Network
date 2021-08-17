@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RelationController;
@@ -99,3 +100,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('sendMessage',[\App\Http\Controllers\MessageContoller::class,'store']);
 });
+Route::post('/forgotPassword',[ForgotPasswordController::class,'forgot']);
+Route::post('/resetPassword',[ForgotPasswordController::class,'reset']);
