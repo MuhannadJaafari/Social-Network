@@ -5,9 +5,6 @@ namespace App\Listeners;
 use App\Events\UserDeletedEvent;
 use App\Models\Group;
 use App\Models\Page;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-
 class DeleteUserListener
 {
 
@@ -53,5 +50,6 @@ class DeleteUserListener
         foreach($user->photo as $photo){
             $photo->delete();
         }
+
     }
 }

@@ -4,6 +4,8 @@ namespace App\Listeners;
 
 use App\Events\CommentDeletedEvent;
 use App\Models\Comment;
+use App\Models\Reply;
+use Illuminate\Support\Facades\DB;
 
 
 class CommentDeleteRelations
@@ -17,25 +19,21 @@ class CommentDeleteRelations
     public function handle(CommentDeletedEvent $event)
     {
         $comment = $event->comment;
-//        $comment->likes()-
-//        foreach ($comment->likes()->get() as $like) {
-//            $like->delete();
-//        }
-//        foreach ($comment->photo()->get() as $photo) {
-//            $photo->delete();
-//        }
-//        foreach ($comment->video()->get() as $video) {
-//            $video->delete();
-//        }
-//        foreach ($comment->replies()->get() as $reply) {
-//            $reply->delete();
-//        }
-//        foreach ($comment->replies as $reply) {
-//            $rComment = Comment::find($reply->pivot->reply_id);
-//            $rComment->replies()->detach();
-//            $rComment->delete();
-//        }
-//        $comment->replies()->detach();
-//        $comment->hashtags()->detach();
+        foreach ($comment->likes()->get() as $like) {
+            $like->delete();
+        }
+        foreach ($comment->photo()->get() as $photo) {
+            $photo->delete();
+        }
+        foreach ($comment->video()->get() as $video) {
+            $video->delete();
+        }
+        if ($comment->reply === 1) {
+            $reply = Reply::where('reply_id', '=', $comment->id);
+            $reply->delete();
+        } else {
+            $comment->replies()->detach();
+        }
+        $comment->hashtags()->detach();
     }
 }

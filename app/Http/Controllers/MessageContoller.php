@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendMessageEvent;
+use App\Models\Users\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -44,7 +46,7 @@ class MessageContoller extends Controller
             'conversation_id'=>$request->conversation_id,
             'text'=>$request->text
         ]);
-//        $message->save();
+        SendMessageEvent::dispatch(User::find(auth()->user()->getAuthIdentifier()),$message);
         return \response()->json(['done']);
     }
 

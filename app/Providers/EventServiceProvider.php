@@ -7,6 +7,7 @@ use App\Events\FriendShipCreatedEvent;
 use App\Events\GroupDeleteEvent;
 use App\Events\PageDeletedEvent;
 use App\Events\PostDeletedEvent;
+use App\Events\ReplyDeletedEvent;
 use App\Events\UserDeletedEvent;
 use App\Listeners\CheckHashtagTable;
 use App\Listeners\CommentDeleteRelations;
@@ -15,6 +16,7 @@ use App\Listeners\DeleteGroupFromPivotListener;
 use App\Listeners\DeletePageFromPivotListener;
 use App\Listeners\DeleteUserListener;
 use App\Listeners\PostDeleteRelations;
+use App\Listeners\ReplyDeletedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -49,6 +51,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         FriendShipCreatedEvent::class => [
             CreateConversationListener::class
+        ],
+        ReplyDeletedEvent::class =>[
+            ReplyDeletedListener::class
         ]
     ];
 

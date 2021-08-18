@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\MessageContoller;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RelationController;
 use App\Http\Controllers\SearchController;
@@ -36,16 +37,14 @@ Route::post('/login', [AuthController::class, 'login']);
 //Route::get('{post_id}/likes', [PostController::class, 'getLikes']);
 //Route::get('{post_id}/sharers', [PostController::class, 'getSharers']);
 //protected routes
-Route::get('/',function(){
-    return User::all();
-//   event(new \App\Events\SendMessageEvent('hi dude'));
+Route::get('/', function () {
 });
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('user')->group(function () {
-        Route::post('/profilePage',[UserController::class,'show']);
+        Route::post('/profilePage', [UserController::class, 'show']);
         Route::post('/posts', [PostController::class, 'getPosts']);
         Route::post('/timeline', [PostController::class, 'getTimeline']);
         Route::post('/deactivate', [UserController::class, 'destroy']);
@@ -82,7 +81,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/search', [SearchController::class, 'search']);
 
- Route::post('/likeComment',[CommentController::class,'like']);
+    Route::post('/likeComment', [CommentController::class, 'like']);
 //    Route::post('newHashtag', [HashtagController::class, 'store']);
 
 //    Route::post('/{post}/viewed', [PostController::class, 'viewPost']);//for newsFeed algo
@@ -97,8 +96,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/addGroupPost', [GroupController::class, 'addGroupPost']);
     Route::post('/addReply', [CommentController::class, 'reply']);
 
-
-    Route::post('sendMessage',[\App\Http\Controllers\MessageContoller::class,'store']);
+    Route::post('/sendMessage', [MessageContoller::class, 'store']);
 });
-Route::post('/forgotPassword',[ForgotPasswordController::class,'forgot']);
-Route::post('/resetPassword',[ForgotPasswordController::class,'reset']);
+Route::post('/forgotPassword', [ForgotPasswordController::class, 'forgot']);
+Route::post('/resetPassword', [ForgotPasswordController::class, 'reset']);

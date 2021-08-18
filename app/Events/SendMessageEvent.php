@@ -22,10 +22,10 @@ class SendMessageEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($user,$message)
     {
-//        $this->user = $user;
         $this->message = $message;
+        $this->user = $user;
     }
 
     /**
@@ -35,7 +35,7 @@ class SendMessageEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('message');
+        return new Channel('message'.$this->message->conversation_id);
     }
 
 }

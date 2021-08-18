@@ -67,10 +67,12 @@ class CommentController extends Controller
      */
     public function destroy(Request $request)
     {
-        $comment = Comment::find($request->comment_id);
+        $comment = Comment::findOrFail($request->comment_id);
         $this->authorize('isOwner', $comment);
         $comment->delete();
     }
+
+
 
     public function getComments(Request $request)
     {
