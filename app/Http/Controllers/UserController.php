@@ -146,7 +146,7 @@ class UserController extends Controller
         if($request->profilePhoto){
             $photo = new Photo();
             $photo->photo_type = 'profile_pic';
-            $photo->url = base_path().'\\storage\\app\\'.$request->profilePhoto->store('profilePic');
+            $photo->url = 'http://127.0.0.1:8000/storage/'.$request->profilePhoto->store('profilePic');
             $user->photo()->save($photo);
             $photo = null;
         }if($request->coverPhoto){
