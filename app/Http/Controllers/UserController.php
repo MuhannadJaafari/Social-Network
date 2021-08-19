@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -118,7 +119,10 @@ class UserController extends Controller
             $oldPhoto->save();
         }
         $newPhoto = new Photo();
-        $newPhoto->url = $photo->store('profilePhoto');
+        $path = $photo->store(
+            'profilePic', 'public'
+        );
+        $photo->url = asset('storage') . '/' . $path;
         $newPhoto->photo_type = 'profile';
         $newPhoto->current = 1;
         $user->photo()->save($newPhoto);
@@ -135,26 +139,20 @@ class UserController extends Controller
             $oldPhoto->save();
         }
         $newPhoto = new Photo();
-        $newPhoto->url = $photo->store('profilePhoto');
+        $path = $photo->store(
+            'coverPic', 'public'
+        );
+        $photo->url = asset('storage') . '/' . $path;
         $newPhoto->photo_type = 'cover';
         $newPhoto->current = 1;
         $user->photo()->save($newPhoto);
     }
 
-    public function updateUserPhotos(Request $request){
+    public function updateUserPhotos(Request $request)
+    {
         $user = User::find(auth()->user()->getAuthIdentifier());
-        if($request->profilePhoto){
-            $photo = new Photo();
-            $photo->photo_type = 'profile_pic';
-            $photo->url = 'http://127.0.0.1:8000/storage/'.$request->profilePhoto->store('profilePic');
-            $user->photo()->save($photo);
-            $photo = null;
-        }if($request->coverPhoto){
-            $photo = new Photo();
-            $photo->photo_type = 'cover_pic';
-            $photo->url = base_path().'\\storage\\app\\'.$request->coverPhoto->store('coverPic');
-            $user->photo()->save($photo);
-        }
+        $this->storeProfilePic($user, $request->profilePhoto);
+        $this->storeCoverPic($user, $request->coverPhoto);
     }
 
 }

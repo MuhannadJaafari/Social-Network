@@ -64,9 +64,9 @@ class PostController extends Controller
         $post = Post::find($request->post_id);
         //return $post;
         $this->authorize('isOwner', $post);
-        $post->text_body=$request->text_body;
-        foreach ($request->deleted_photos as $id){
-            $photo=Photo::find($id);
+        $post->text_body = $request->text_body;
+        foreach ($request->deleted_photos as $id) {
+            $photo = Photo::find($id);
             $photo->delete();
         }
 //        foreach ($request->added_photos as $photourl){
@@ -74,9 +74,9 @@ class PostController extends Controller
 //            $photo->url=$photourl;
 //            $post->photos()->save($photo);
 //        }
-        $this->storePhotos($request,$post);
-        foreach ($request->deleted_videos as $id){
-            $video=Video::find($id);
+        $this->storePhotos($request, $post);
+        foreach ($request->deleted_videos as $id) {
+            $video = Video::find($id);
             $video->delete();
         }
 //        foreach ($request->added_videos as $videourl){
@@ -84,7 +84,7 @@ class PostController extends Controller
 //            $video->url=$videourl;
 //            $post->videos()->save($video);
 //        }
-        $this->storeVideos($request,$post);
+        $this->storeVideos($request, $post);
         $post->save();
     }
 
@@ -147,7 +147,8 @@ class PostController extends Controller
         }
         foreach ($request->photos as $photo) {
             $newPhoto = new Photo();
-            $newPhoto->url = base_path().'\\storage\\app\\'.$photo->store('postPhoto');
+            $path = $photo->store('postPhoto', 'public');
+            $newPhoto->url = asset('storage') . '/' . $path;
             $post->photos()->save($newPhoto);
         }
     }
@@ -159,8 +160,9 @@ class PostController extends Controller
         }
         foreach ($request->videos as $video) {
             $newVideo = new Video();
-            $newVideo->views=0;
-            $newVideo->url = base_path().'\\storage\\app\\'.$video->store('postVideo');
+            $newVideo->views = 0;
+            $path = $video->store('postVideo', 'public');
+            $newVideo->url = asset('storage') . '/' . $path;
             $post->videos()->save($newVideo);
         }
 
