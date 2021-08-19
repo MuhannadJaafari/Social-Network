@@ -19,7 +19,7 @@ use Laravel\Scout\Searchable;
 
 class User extends Authenticate
 {
-    use HasFactory, Notifiable, HasApiTokens,Searchable;
+    use HasFactory, Notifiable, HasApiTokens, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -44,7 +44,7 @@ class User extends Authenticate
         'created_at',
     ];
     protected $dispatchesEvents = [
-        'deleting'=>UserDeletedEvent::class
+        'deleting' => UserDeletedEvent::class
     ];
 
     /**
@@ -71,7 +71,7 @@ class User extends Authenticate
         return $this->hasOne(Address::class, 'user_id');
     }
 
-    public function relationUser($id1,$id2)
+    public function relationUser($id1, $id2)
     {
 //        SELECT users.id,relation_user.user2_id FROM `users`
 //INNER join relation_user
@@ -79,7 +79,7 @@ class User extends Authenticate
 
 //        $relation =
 //            return $this->belongsToMany(User::class, 'relation_user', 'user1_id', 'user2_id')->withPivot('relation');
-        return $this->belongsToMany(User::class, 'relation_user', $id1, $id2)->withPivot('relation','blocker');
+        return $this->belongsToMany(User::class, 'relation_user', $id1, $id2)->withPivot('relation', 'blocker');
 //        if ($relation->count()) {
 //            return $relation;
 //        }
@@ -105,8 +105,10 @@ class User extends Authenticate
     {
         return $this->belongsToMany(Group::class, 'group_user');
     }
-    public function photo(){
-        return $this->morphMany(Photo::class,'photoable');
+
+    public function photo()
+    {
+        return $this->morphMany(Photo::class, 'photoable');
     }
 
 }

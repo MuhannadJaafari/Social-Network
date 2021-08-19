@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('user')->group(function () {
+        Route::post('/profilePhotos',[UserController::class,'updateUserPhotos']);
         Route::post('/profilePage', [UserController::class, 'show']);
         Route::post('/posts', [PostController::class, 'getPosts']);
         Route::post('/timeline', [PostController::class, 'getTimeline']);

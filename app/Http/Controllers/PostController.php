@@ -100,10 +100,9 @@ class PostController extends Controller
         $post->delete();
     }
 
-    public function getPosts(Request $request, $id = null)
+    public function getPosts(Request $request)
     {
-        $id = $id === null ? auth()->user()->getAuthIdentifier() : $id;
-        $user = User::find($id);
+        $user = User::find($request->user_id);
         $posts = $user->posts()->simplePaginate(3);
         foreach ($posts as $post) {
             $post->photos;
@@ -148,7 +147,7 @@ class PostController extends Controller
         }
         foreach ($request->photos as $photo) {
             $newPhoto = new Photo();
-            $newPhoto->url = $photo->store('postPhoto');
+            $newPhoto->url = base_path().'\\storage\\app\\'.$photo->store('postPhoto');
             $post->photos()->save($newPhoto);
         }
     }
@@ -161,7 +160,7 @@ class PostController extends Controller
         foreach ($request->videos as $video) {
             $newVideo = new Video();
             $newVideo->views=0;
-            $newVideo->url = $video->store('postVideo');
+            $newVideo->url = base_path().'\\storage\\app\\'.$video->store('postVideo');
             $post->videos()->save($newVideo);
         }
 

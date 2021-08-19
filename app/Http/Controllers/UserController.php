@@ -22,10 +22,10 @@ class UserController extends Controller
      *
      *
      */
-    public function show(User $user)
+    public function show(Request $request)
     {
 
-
+        $user = User::find($request->user_id);
         if (!Gate::allows('can-view-user', $user)) {
             return response('Unauthorized', 403);
         }
@@ -139,6 +139,22 @@ class UserController extends Controller
         $newPhoto->photo_type = 'cover';
         $newPhoto->current = 1;
         $user->photo()->save($newPhoto);
+    }
+
+    public function updateUserPhotos(Request $request){
+        $user = User::find(auth()->user()->getAuthIdentifier());
+        if($request->profilePhoto){
+            $photo = new Photo();
+            $photo->photo_type = 'profile_pic';
+            $photo->url = base_path().'\\storage\\app\\'.$request->profilePhoto->store('profilePic');
+            $user->photo()->save($photo);
+            $photo = null;
+        }if($request->coverPhoto){
+            $photo = new Photo();
+            $photo->photo_type = 'cover_pic';
+            $photo->url = base_path().'\\storage\\app\\'.$request->coverPhoto->store('coverPic');
+            $user->photo()->save($photo);
+        }
     }
 
 }
