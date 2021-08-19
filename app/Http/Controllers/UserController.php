@@ -122,7 +122,7 @@ class UserController extends Controller
         $path = $photo->store(
             'profilePic', 'public'
         );
-        $photo->url = asset('storage') . '/' . $path;
+        $newPhoto->url = asset('storage') . '/' . $path;
         $newPhoto->photo_type = 'profile';
         $newPhoto->current = 1;
         $user->photo()->save($newPhoto);
@@ -142,7 +142,7 @@ class UserController extends Controller
         $path = $photo->store(
             'coverPic', 'public'
         );
-        $photo->url = asset('storage') . '/' . $path;
+        $newPhoto->url = asset('storage') . '/' . $path;
         $newPhoto->photo_type = 'cover';
         $newPhoto->current = 1;
         $user->photo()->save($newPhoto);
