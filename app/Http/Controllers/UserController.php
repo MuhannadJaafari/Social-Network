@@ -36,8 +36,8 @@ class UserController extends Controller
         $user_page = [
             'id' => $user->id,
             'name' => $user->name,
-            //profile pic
-            //cover pic
+            'profile_pic'=>$user->photo()->where('photo_type','=','profile')->where('current','=','1')->first()->url,
+            'cover_pic'=>$user->photo()->where('photo_type','=','cover')->where('current','=','1')->first()->url,
             'town' => $address->town,
             'city' => $address->city,
         ];
