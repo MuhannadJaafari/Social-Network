@@ -58,32 +58,32 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
-    var notificationsWrapper   = $('.dropdown-notifications');
-    var notificationsToggle    = notificationsWrapper.find('a[data-toggle]');
-    var notificationsCountElem = notificationsToggle.find('i[data-count]');
-    var notificationsCount     = parseInt(notificationsCountElem.data('count'));
-    var notifications          = notificationsWrapper.find('ul.dropdown-menu');
-
-    if (notificationsCount <= 0) {
-        notificationsWrapper.hide();
-    }
-
-    // Enable pusher logging - don't include this in production
-    // Pusher.logToConsole = true;
-
-    var pusher = new Pusher('1e567bfd239edc66230b', {
-        encrypted: true,
-        cluster:'us3',
-
-    });
-
-    // Subscribe to the channel we specified in our Laravel Event
-    var channel = pusher.subscribe('message');
-
-    // Bind a function to a Event (the full Laravel class)
-    channel.bind('App\\Events\\SendMessageEvent', function(data) {
-       console.log(data);
-    });
+    // var notificationsWrapper   = $('.dropdown-notifications');
+    // var notificationsToggle    = notificationsWrapper.find('a[data-toggle]');
+    // var notificationsCountElem = notificationsToggle.find('i[data-count]');
+    // var notificationsCount     = parseInt(notificationsCountElem.data('count'));
+    // var notifications          = notificationsWcomporapper.find('ul.dropdown-menu');
+    //
+    // if (notificationsCount <= 0) {
+    //     notificationsWrapper.hide();
+    // }
+    //
+    // // Enable pusher logging - don't include this in production
+    // // Pusher.logToConsole = true;
+    //
+    // var pusher = new Pusher('1e567bfd239edc66230b', {
+    //     encrypted: true,
+    //     cluster:'us3',
+    //
+    // });
+    //
+    // // Subscribe to the channel we specified in our Laravel Event
+    // var channel = pusher.subscribe('message');
+    //
+    // // Bind a function to a Event (the full Laravel class)
+    // channel.bind('App\\Events\\SendMessageEvent', function(data) {
+    //    console.log(data);
+    // });
 </script>
 </body>
 </html>
