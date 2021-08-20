@@ -24,5 +24,7 @@ use App\Models\Users\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/csrf',function(){
+    return csrf_token();
+});
 Route::view('forgot_passowrd','reset_password')->name('password.reset');
