@@ -120,9 +120,9 @@ class UserController extends Controller
         }
         $newPhoto = new Photo();
         $path = $photo->store(
-            'profilePic', 'public'
+            '', 'public'
         );
-        $newPhoto->url = asset('storage') . '/' . $path;
+        $newPhoto->url = asset('/') . '/' . $path;
         $newPhoto->photo_type = 'profile';
         $newPhoto->current = 1;
         $user->photo()->save($newPhoto);

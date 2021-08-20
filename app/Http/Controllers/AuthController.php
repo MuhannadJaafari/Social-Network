@@ -24,6 +24,7 @@ class AuthController extends Controller
         $user->username()->save(new Username(['name' => $this->helper->filter($request, ['username'])['username']]));
         if ($request->get('city') && $request->get('town'))
             $user->address()->save(new Address($this->helper->filter($request, ['town', 'city'])));
+        $request->session()->regenerate();
         return response()->json([
             'token' => $user->createToken('API Token')->plainTextToken,
             'id' => $user->id]);
@@ -38,6 +39,7 @@ class AuthController extends Controller
                 'message' => 'wrong credentials'
             ]);
         }
+        $request->session()->regenerate();
         return response()->json(['token' => auth()->user()->createToken('API Token')->plainTextToken]);
     }
 
