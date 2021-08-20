@@ -13,7 +13,9 @@ class ForgotPasswordController extends Controller
 
         Password::sendResetLink($crd);
 
-        return ['sent'];
+        return ['mail sent to your email
+        ,
+        check your spam'];
     }
 
     public function reset()
