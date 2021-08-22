@@ -11,6 +11,7 @@ use App\Models\Users\Username;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
@@ -36,13 +37,30 @@ class UserController extends Controller
         $user_page = [
             'id' => $user->id,
             'name' => $user->name,
-            'profile_pic'=>$user->photo()->where('photo_type','=','profile')->where('current','=','1')->first()->url,
-            'cover_pic'=>$user->photo()->where('photo_type','=','cover')->where('current','=','1')->first()->url,
+//            'profile_pic'=>$user->photo()->where('photo_type','=','profile')->where('current','=','1')->first()->url,
+//            'cover_pic'=>$user->photo()->where('photo_type','=','cover')->where('current','=','1')->first()->url,
             'town' => $address->town,
             'city' => $address->city,
         ];
+        $friendshipStatus = null;
+         if($request->user_id !==auth()->user()->id){
+             $user1_id = $request->user_id;
+             $user2_id = auth()->user()->id;
+             $friendshipStatus = RelationUser::where('user1_id', '=', $user1_id)->where('user2_id', '=', $user2_id)
+                 ->orWhere(function ($query) use ($user1_id, $user2_id) {
+                     $query->where('user2_id', '=', $user1_id)
+                         ->where('user1_id', '=', $user2_id);
+                 })->first();
+             if(!$friendshipStatus){
+                 $friendshipStatus = $user->relationUser(auth()->user()->id,$request->user_id)->first();
+                 if(!$friendshipStatus){
+                     $friendshipStatus = null;
+                 }
+             }
 
-        return response()->json([$user_page]);
+         }
+
+            return response()->json([collect($user_page)->merge($friendshipStatus)]);
     }
 
 

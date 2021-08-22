@@ -8,6 +8,7 @@ use App\Models\Users\Address;
 use App\Models\Users\User;
 use App\Models\Users\Username;
 use http\Env\Response;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -16,11 +17,16 @@ class AuthController extends Controller
 
     public function register(UserAccountCreatingRequest $request)
     {
+
         $request = collect($request);
+
         $user_info = $this->helper->filter($request, ['name', 'email', 'password', 'birth_date']);
+
         $user_info['password'] = bcrypt($user_info['password']);
-        $user_info['birth_date'] = '1999-14-09';
+        $user_info['birth_date'] = Carbon::parse($request['birth_date']);
         $user = User::create($user_info);
+        $user->birth_date = Carbon::parse($request['birth_date']);
+        $user->save();
         $user->username()->save(new Username(['name' => $this->helper->filter($request, ['username'])['username']]));
         if ($request->get('city') && $request->get('town'))
             $user->address()->save(new Address($this->helper->filter($request, ['town', 'city'])));
@@ -38,7 +44,7 @@ class AuthController extends Controller
                 'message' => 'wrong credentials'
             ]);
         }
-        return response()->json(['token' => auth()->user()->createToken('API Token')->plainTextToken]);
+        return response()->json(['token' => auth()->user()->createToken('API Token')->plainTextToken, 'id' => auth()->user()->id]);
     }
 
     public function logout()

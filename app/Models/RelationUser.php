@@ -11,7 +11,9 @@ class RelationUser extends Pivot
     protected $table = 'relation_user';
     protected $hidden = [
         'user1_id',
-        'user2_id'
+        'user2_id',
+        'created_at',
+        'updated_at'
     ];
 
 }
