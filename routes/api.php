@@ -6,7 +6,6 @@ use App\Http\Controllers\MessageContoller;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RelationController;
 use App\Http\Controllers\SearchController;
-use App\Models\Users\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -51,6 +50,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/timeline', [PostController::class, 'getTimeline']);
         Route::post('/deactivate', [UserController::class, 'destroy']);
         Route::post('/update', [UserController::class, 'update']);
+        Route::post('newPassword',[AuthController::class,'changePassword']);
     });
 
     Route::prefix('relation')->group(function () {

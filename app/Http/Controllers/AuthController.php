@@ -7,6 +7,7 @@ use App\Http\Requests\UserLogInRequest;
 use App\Models\Users\Address;
 use App\Models\Users\User;
 use App\Models\Users\Username;
+use http\Env\Request;
 use http\Env\Response;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -46,12 +47,22 @@ class AuthController extends Controller
         }
         return response()->json(['token' => auth()->user()->createToken('API Token')->plainTextToken, 'id' => auth()->user()->id]);
     }
-
     public function logout()
     {
         auth()->user()->tokens()->delete();
         return [
             'message' => 'Logged out'
         ];
+    }
+    public function changePassword()
+    {
+        $user = User::find(\auth()->user()->getAuthIdentifier());
+        $newCryptedPassword=bcrypt(\request()->newPassword);
+        $user->password=$newCryptedPassword;
+        $user->save();
+        auth()->user()->tokens()->delete();
+        return response()->json([
+            'token' => $user->createToken('API Token')->plainTextToken,
+            'id' => $user->id]);
     }
 }
