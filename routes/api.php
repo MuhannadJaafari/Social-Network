@@ -59,11 +59,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/accept', [RelationController::class, 'accept']);
         Route::post('/reject', [RelationController::class, 'delete']);
         Route::post('/unfriend', [RelationController::class, 'delete']);
+        Route::post('/cancel', [RelationController::class, 'delete']);
         Route::post('/block', [RelationController::class, 'block']);
         Route::post('/unblock', [RelationController::class, 'unblock']);
         Route::post('/getRelation', [RelationController::class, 'getCurrentRelation']);
         Route::post('/friendsRequests', [RelationController::class, 'getFriendsRequests']);
         Route::post('/friends', [RelationController::class, 'getFriends']);
+        Route::post('/blockedUsers',[RelationController::class,'getBlockedUsers']);
     });
 
 

@@ -28,6 +28,11 @@ class RelationController extends Controller
         ]);
     }
 
+    public function getBlockedUsers(){
+        $user = User::find(auth()->user()->id);
+
+
+    }
     public function add(Request $request)
     {
         //todo make request protection for id of user incoming
@@ -95,8 +100,7 @@ class RelationController extends Controller
         if (!$relation) {
             $relation = $user->relationUser('user1_id', 'user2_id')->where('user2_id', $request->id)->first();
         }
-        if ($relation)
-            $relation->pivot->delete();
+        $relation?->pivot->delete();
     }
 
     public function getFriendsRequests()

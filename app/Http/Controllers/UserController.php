@@ -44,19 +44,22 @@ class UserController extends Controller
             'town' => $address === null ? 'null' : $address->town,
             'city' => $address === null ? 'null' : $address->city,
         ];
-        $friendshipStatus = 'null';
+        $friendship = 'null';
+        $sender_id = 'null';
         if ($request->user_id !== auth()->user()->id) {
             $user1_id = $request->user_id;
             $user2_id = auth()->user()->id;
-            $friendshipStatus = RelationUser::where('user1_id', '=', $user1_id)->where('user2_id', '=', $user2_id)
+            $friendship = RelationUser::where('user1_id', '=', $user1_id)->where('user2_id', '=', $user2_id)
                 ->orWhere(function ($query) use ($user1_id, $user2_id) {
-                    $query->where('user2_id', '=', $user2_id)
-                        ->where('user1_id', '=', $user1_id);
+                    $query->where('user1_id', '=', $user2_id)
+                        ->where('user2_id', '=', $user1_id);
                 })->first();
 
         }
-        if (!$friendshipStatus) $friendshipStatus = ['relation' => null];
-        return response()->json([collect($user_page)->merge($friendshipStatus)]);
+        if (!$friendship) $friendship = ['relation' => null];
+        else
+            $friendship->senderId = $friendship->user1_id;
+        return response()->json([collect($user_page)->merge($friendship)]);
     }
 
 
@@ -113,7 +116,6 @@ class UserController extends Controller
             $user->posts
         ]);
     }
-
 
 
 }

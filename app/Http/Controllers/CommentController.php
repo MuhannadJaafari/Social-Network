@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Events\PostCommentedEvent;
 use App\Models\Comment;
 use App\Models\Hashtag;
 use App\Models\Like;
@@ -30,6 +31,8 @@ class CommentController extends Controller
         $this->storePhoto($request, $comment);
         $this->storeVideo($request, $comment);
         $this->storeHashtags($request, $comment);
+        $user=User::find($post->postable_id);
+        PostCommentedEvent::dispatch($user,$post);
     }
 
     /**
