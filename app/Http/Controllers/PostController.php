@@ -142,30 +142,27 @@ class PostController extends Controller
 
     private function storePhotos(Request $request, Post $post)
     {
-        if (!$request->photos) {
+        if (!$request->photo) {
             return;
         }
-        foreach ($request->photos as $photo) {
-            $newPhoto = new Photo();
-            $path = $photo->store('postPhoto', 'public');
-            $newPhoto->url = asset('storage') . '/' . $path;
-            $post->photos()->save($newPhoto);
-        }
+        $photo = $request->photo;
+        $newPhoto = new Photo();
+        $path = $photo->store('postPhoto', 'public_uploads');
+        $newPhoto->url = 'https://oneaddressfashion.com' . '/' . $path;
+        $post->photos()->save($newPhoto);
+
     }
 
     private function storeVideos(Request $request, Post $post)
     {
-        if (!$request->videos) {
+        if (!$request->video) {
             return;
         }
-        foreach ($request->videos as $video) {
-            $newVideo = new Video();
-            $newVideo->views = 0;
-            $path = $video->store('postVideo', 'public');
-            $newVideo->url = asset('storage') . '/' . $path;
-            $post->videos()->save($newVideo);
-        }
-
+        $newVideo = new Video();
+        $newVideo->views = 0;
+        $path = $request->video->store('postVideo', 'public_uploads');
+        $newVideo->url = 'https://oneaddressfashion.com' . '/' . $path;
+        $post->videos()->save($newVideo);
     }
 
     public function storeHashtags(Request $request, Post $post)

@@ -6,6 +6,7 @@ use App\Helper;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\Photo;
 use App\Models\RelationUser;
+use App\Models\Users\Address;
 use App\Models\Users\User;
 use App\Models\Users\Username;
 use Illuminate\Database\Eloquent\Model;
@@ -27,40 +28,35 @@ class UserController extends Controller
     public function show(Request $request)
     {
 
-        $user = User::find($request->user_id);
+        $user = User::findOrFail($request->user_id);
         if (!Gate::allows('can-view-user', $user)) {
             return response('Unauthorized', 403);
         }
 
         $address = $user->address()->first();
-
+        $profilePic = $user->photo()->where('photo_type', '=', 'profile')->where('current', '=', '1')->first();
+        $coverPic = $user->photo()->where('photo_type', '=', 'cover')->where('current', '=', '1')->first();
         $user_page = [
             'id' => $user->id,
             'name' => $user->name,
-//            'profile_pic'=>$user->photo()->where('photo_type','=','profile')->where('current','=','1')->first()->url,
-//            'cover_pic'=>$user->photo()->where('photo_type','=','cover')->where('current','=','1')->first()->url,
-            'town' => $address->town,
-            'city' => $address->city,
+            'profile_pic' => ($profilePic === null ? 'null' : $profilePic->url),
+            'cover_pic' => ($coverPic === null ? 'null' : $coverPic->url),
+            'town' => $address === null ? 'null' : $address->town,
+            'city' => $address === null ? 'null' : $address->city,
         ];
-        $friendshipStatus = null;
-         if($request->user_id !==auth()->user()->id){
-             $user1_id = $request->user_id;
-             $user2_id = auth()->user()->id;
-             $friendshipStatus = RelationUser::where('user1_id', '=', $user1_id)->where('user2_id', '=', $user2_id)
-                 ->orWhere(function ($query) use ($user1_id, $user2_id) {
-                     $query->where('user2_id', '=', $user1_id)
-                         ->where('user1_id', '=', $user2_id);
-                 })->first();
-             if(!$friendshipStatus){
-                 $friendshipStatus = $user->relationUser(auth()->user()->id,$request->user_id)->first();
-                 if(!$friendshipStatus){
-                     $friendshipStatus = null;
-                 }
-             }
+        $friendshipStatus = 'null';
+        if ($request->user_id !== auth()->user()->id) {
+            $user1_id = $request->user_id;
+            $user2_id = auth()->user()->id;
+            $friendshipStatus = RelationUser::where('user1_id', '=', $user1_id)->where('user2_id', '=', $user2_id)
+                ->orWhere(function ($query) use ($user1_id, $user2_id) {
+                    $query->where('user2_id', '=', $user2_id)
+                        ->where('user1_id', '=', $user1_id);
+                })->first();
 
-         }
-
-            return response()->json([collect($user_page)->merge($friendshipStatus)]);
+        }
+        if (!$friendshipStatus) $friendshipStatus = ['relation' => null];
+        return response()->json([collect($user_page)->merge($friendshipStatus)]);
     }
 
 
@@ -75,27 +71,19 @@ class UserController extends Controller
     {
         //name/email/password/profilePic/coverPic/username/birth_date/address
         $user = User::find(auth()->user()->getAuthIdentifier());
-        if ($user->email != $request->email) {
+        if ($user->email && $user->email != $request->email) {
             $request->validate(['email' => 'unique:App\Models\Users\User,email']);
         }
         if ($user->username != $request->username) {
             $request->validate(['email' => 'unique:usernames,name']);
         }
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'birth_date' => $request->birth_date
-        ]);
-        $this->storeProfilePic($user, $request->profile_pic);
-        $this->storeCoverPic($user, $request->cover_pic);
-        $user->address()->update([
-            'city' => $request->city,
-            'town' => $request->town,
-        ]);
+//        $user->update([$request->all()]);
+//        Address::updateOrCreate(
+//            [   ],[]
+//        );
 
         $user->username()->update([
-            'name' => $request->username,
+            $request->all()
         ]);
     }
 
@@ -126,51 +114,6 @@ class UserController extends Controller
         ]);
     }
 
-    private function storeProfilePic($user, $photo)
-    {
-        if (!$photo) {
-            return;
-        }
-        $oldPhoto = Photo::where('photo_type', '=', 'profile')->where('current', '=', '1')->first();
-        if ($oldPhoto) {
-            $oldPhoto->current = 0;
-            $oldPhoto->save();
-        }
-        $newPhoto = new Photo();
-        $path = $photo->store(
-            '', 'public'
-        );
-        $newPhoto->url = asset('/') . '/' . $path;
-        $newPhoto->photo_type = 'profile';
-        $newPhoto->current = 1;
-        $user->photo()->save($newPhoto);
-    }
 
-    private function storeCoverPic($user, $photo)
-    {
-        if (!$photo) {
-            return;
-        }
-        $oldPhoto = Photo::where('photo_type', '=', 'cover')->where('current', '=', '1')->first();
-        if ($oldPhoto) {
-            $oldPhoto->current = 0;
-            $oldPhoto->save();
-        }
-        $newPhoto = new Photo();
-        $path = $photo->store(
-            'coverPic', 'public'
-        );
-        $newPhoto->url = asset('storage') . '/' . $path;
-        $newPhoto->photo_type = 'cover';
-        $newPhoto->current = 1;
-        $user->photo()->save($newPhoto);
-    }
-
-    public function updateUserPhotos(Request $request)
-    {
-        $user = User::find(auth()->user()->getAuthIdentifier());
-        $this->storeProfilePic($user, $request->profilePhoto);
-        $this->storeCoverPic($user, $request->coverPhoto);
-    }
 
 }

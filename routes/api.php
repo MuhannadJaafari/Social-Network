@@ -44,13 +44,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('user')->group(function () {
-        Route::post('/profilePhotos',[UserController::class,'updateUserPhotos']);
+        Route::post('/updateProfilePic',[PhotoController::class,'updateProfilePic']);
+        Route::post('/updateCoverPic',[PhotoController::class,'updateCoverPic']);
         Route::post('/profilePage', [UserController::class, 'show']);
         Route::post('/posts', [PostController::class, 'getPosts']);
         Route::post('/timeline', [PostController::class, 'getTimeline']);
         Route::post('/deactivate', [UserController::class, 'destroy']);
         Route::post('/update', [UserController::class, 'update']);
-        Route::post('newPassword',[AuthController::class,'changePassword']);
+        Route::post('/newPassword',[AuthController::class,'changePassword']);
     });
 
     Route::prefix('relation')->group(function () {
@@ -97,7 +98,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/addPagePost', [PageController::class, 'addPagePost']);
     Route::post('/addGroupPost', [GroupController::class, 'addGroupPost']);
     Route::post('/addReply', [CommentController::class, 'reply']);
-
     Route::post('/sendMessage', [MessageContoller::class, 'store']);
 });
 Route::post('/forgotPassword', [ForgotPasswordController::class, 'forgot']);

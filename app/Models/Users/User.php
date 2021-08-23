@@ -55,7 +55,8 @@ class User extends Authenticate
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
+    protected $appends = array('profilePic','coverPic');
+    public $profilePic,$coverPic;
     public function posts()
     {
         return $this->morphMany(Post::class, 'postable');
@@ -70,7 +71,12 @@ class User extends Authenticate
     {
         return $this->hasOne(Address::class, 'user_id');
     }
-
+    public function getProfilePicAttribute(){
+        return $this->profilePic;
+    }
+    public function getCoverPicAttribute(){
+        return $this->coverPic;
+    }
     public function relationUser($id1, $id2)
     {
 //        SELECT users.id,relation_user.user2_id FROM `users`

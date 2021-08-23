@@ -11,99 +11,41 @@ use Illuminate\Http\Response;
 
 class PhotoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function store(Request $request)
-    {
-        Photo::create($request->all());
-        return response()->json(['done']);
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return JsonResponse
-     */
-    public function show($id)
-    {
-        $photo =Photo::find($id);
-        return response()->json(['photoable_id'=>$photo->photoable_id,
-            'photoable_type'=>$photo->photoable_type,
-            'photo_url'=>$photo->url]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function edit(int $id): Response
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function update(Request $request)
-    {
-        $photo=Photo::find($request->id);
-        $this->authorize($request,$photo);
-        $photo->url=$request->url;
-        $photo->update();
-        return response()->json(['done']);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     * @throws AuthorizationException
-     */
-    public function destroy(Request $request): JsonResponse
-    {
-        $photo=Photo::find($request->id);
-        $this->authorize('isOwner',$photo);
-        $photo->delete();
-        return response()->json(['done']);
-    }
     public function updateProfilePic(Request $request)
     {
-        //TODO
+        $user = User::find(auth()->user()->id);
+        $photo = $request->photo;
+        $oldPhoto = Photo::where('photo_type', '=', 'profile')->where('current', '=', '1')->first();
+        if ($oldPhoto) {
+            $oldPhoto->current = 0;
+            $oldPhoto->save();
+        }
+        $newPhoto = new Photo();
+        $path = $photo->store(
+            'profilePic', 'public_uploads'
+        );
+
+        $newPhoto->url = 'https://oneaddressfashion.com' . '/' . $path;
+        $newPhoto->photo_type = 'profile';
+        $newPhoto->current = 1;
+        $user->photo()->save($newPhoto);
     }
-    public function deleteProfilePic(Request $request)
+
+    public function updateCoverPic(Request $request)
     {
-        //TODO
+        $oldPhoto = Photo::where('photo_type', '=', 'cover')->where('current', '=', '1')->first();
+        $photo = $request->photo;
+        if ($oldPhoto) {
+            $oldPhoto->current = 0;
+            $oldPhoto->save();
+        }
+        $newPhoto = new Photo();
+        $path = $photo->store(
+            'coverPic', 'public_uploads'
+        );
+        $newPhoto->url = 'https://oneaddressfashion.com' . '/' . $path;
+        $newPhoto->photo_type = 'cover';
+        $newPhoto->current = 1;
+        $user->photo()->save($newPhoto);
     }
 }

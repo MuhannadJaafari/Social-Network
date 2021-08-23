@@ -8,12 +8,15 @@ use Illuminate\Http\Request;
 class SearchController extends Controller
 {
     public function search(Request $request){
-        $user = User::search($request->body)->get();
-        return $user;
-        $users = User::where('name','like',$request->body.'%')
-            ->orderBy('name')->get();
-        return $users;
-        $users = $this->helper->filter(collect($users),['id','name']);
-        return $users;
+        if($request->body){
+            $users = User::where('name','like','%'.$request->body.'%')
+                ->orderBy('name')->get();
+            $collection = [];
+            foreach($users as $user){
+                $user->profilePic = collect($user->photo()->where('current','=','1')->first())->get('url');
+                array_push($collection,$user);
+            }
+            return $collection;
+        }
     }
 }
