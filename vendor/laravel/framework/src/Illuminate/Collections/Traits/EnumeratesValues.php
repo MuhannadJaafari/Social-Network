@@ -917,7 +917,9 @@ trait EnumeratesValues
      */
     protected function getArrayableItems($items)
     {
+
         if (is_array($items)) {
+
             return $items;
         } elseif ($items instanceof Enumerable) {
             return $items->all();

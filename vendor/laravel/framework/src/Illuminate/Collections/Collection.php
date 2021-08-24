@@ -29,6 +29,7 @@ class Collection implements ArrayAccess, Enumerable
      */
     public function __construct($items = [])
     {
+
         $this->items = $this->getArrayableItems($items);
     }
 

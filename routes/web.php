@@ -27,4 +27,11 @@ use App\Models\Users\User;
 Route::get('/csrf',function(){
     return csrf_token();
 });
+Route::get('/',function(){
+
+    return view('welcome');
+});
+Route::get('/k', function () {
+    (new \Illuminate\Pagination\LengthAwarePaginator());
+});
 Route::view('forgot_passowrd','reset_password')->name('password.reset');

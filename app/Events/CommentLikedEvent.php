@@ -24,7 +24,7 @@ public $user,$comment,$liker,$message;
         $this->user=$user;
         $this->comment=$comment;
         $this->liker=$liker;
-        $this->message="$liker->name".'liked your comment'."$comment->text_body";
+        $this->message="$liker->name ".'liked your comment';
     }
 
     /**

@@ -16,7 +16,7 @@ class SearchController extends Controller
             $collection = [];
             foreach ($users as $user) {
                 if ($this->canSee($user)) {
-                    $user->profilePic = collect($user->photo()->where('current', '=', '1')->first())->get('url');
+                    $user->profilePic = collect($user->photo()->where('photo_type','=','profile')->where('current', '=', '1')->first())->get('url');
                     array_push($collection, $user);
                 }
             }

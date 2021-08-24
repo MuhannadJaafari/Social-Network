@@ -23,7 +23,7 @@ public $user,$message,$accepter;
     {
         $this->user=$user;
         $this->accepter=$accepter;
-        $this->message="$accepter->name".'accepted your friend request';
+        $this->message="$accepter->name ".'accepted your friend request';
     }
 
     /**

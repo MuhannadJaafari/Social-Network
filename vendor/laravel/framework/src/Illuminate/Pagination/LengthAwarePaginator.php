@@ -10,6 +10,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Collection;
 use IteratorAggregate;
 use JsonSerializable;
+use phpDocumentor\Reflection\Types\Array_;
 
 class LengthAwarePaginator extends AbstractPaginator implements Arrayable, ArrayAccess, Countable, IteratorAggregate, Jsonable, JsonSerializable, LengthAwarePaginatorContract
 {
@@ -191,9 +192,10 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
      */
     public function toArray()
     {
+
         return [
             'current_page' => $this->currentPage(),
-            'data' => $this->items->toArray(),
+            'data' => $this->items->values(),
             'first_page_url' => $this->url(1),
             'from' => $this->firstItem(),
             'last_page' => $this->lastPage(),

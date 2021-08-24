@@ -29,6 +29,7 @@ class LazyCollection implements Enumerable
      */
     public function __construct($source = null)
     {
+
         if ($source instanceof Closure || $source instanceof self) {
             $this->source = $source;
         } elseif (is_null($source)) {

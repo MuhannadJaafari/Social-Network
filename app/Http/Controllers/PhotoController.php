@@ -14,7 +14,7 @@ class PhotoController extends Controller
     public function updateProfilePic(Request $request)
     {
         $user = User::find(auth()->user()->id);
-        $photo = $request->photo;
+        $photo = $request->profilePhoto;
         $oldPhoto = Photo::where('photo_type', '=', 'profile')->where('current', '=', '1')->first();
         if ($oldPhoto) {
             $oldPhoto->current = 0;
@@ -34,7 +34,7 @@ class PhotoController extends Controller
     public function updateCoverPic(Request $request)
     {
         $oldPhoto = Photo::where('photo_type', '=', 'cover')->where('current', '=', '1')->first();
-        $photo = $request->photo;
+        $photo = $request->coverPhoto;
         if ($oldPhoto) {
             $oldPhoto->current = 0;
             $oldPhoto->save();

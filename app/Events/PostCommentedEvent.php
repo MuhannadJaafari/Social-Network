@@ -21,7 +21,7 @@ class PostCommentedEvent implements ShouldBroadcast
     {
         $this->user=$user;
         $this->post=$post;
-        $this->message="$user->name".'commented on your post'."$post->id";
+        $this->message="$user->name ".'commented on your post';
     }
 
     /**

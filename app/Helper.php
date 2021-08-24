@@ -26,7 +26,7 @@ class Helper
 
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof \Illuminate\Database\Eloquent\Collection ? $items : Collection::make($items);
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+        return (new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options));
     }
 
     public function mergeObjects($obj1,$obj2){

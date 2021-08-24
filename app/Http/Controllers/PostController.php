@@ -12,6 +12,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 
 class PostController extends Controller
 {
@@ -119,14 +121,22 @@ class PostController extends Controller
         $friends2 = $user->relationUser('user1_id', 'user2_id')->wherePivot('relation', '=', 'friends');
         $arr = array();
         $collection_of_friends = $this->helper->mergeObjects($friends, $friends2);
+
         foreach ($collection_of_friends as $friend) {
             foreach ($friend->posts as $post) {
                 $post->photos;
-                $post->videos;
+//                $post->videos;
+                $profilePic = $friend->first()->photo()
+                    ->where('photo_type','=','profile')
+                    ->where('current','=','1')->first();
+                if($profilePic){
+                    $post->userProfilePic = $profilePic->url;
+                }
+
                 array_push($arr, $post);
             }
         }
-        return $this->helper->paginate(collect($arr)->sortBy('updated_at'), 3, null, ['path' => $request->fullUrl()]);
+        return $this->helper->paginate(collect($arr)->sortByDesc('updated_at'), 5, null, ['path' => $request->fullUrl()]);
     }
 
     public function sharePost(Request $request)
