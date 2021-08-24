@@ -6,6 +6,7 @@ use App\Events\UserDeletedEvent;
 use App\Models\Comment;
 use App\Models\Conversation;
 use App\Models\Group;
+use App\Models\Notification;
 use App\Models\Page;
 use App\Models\Photo;
 use App\Models\Post;
@@ -115,6 +116,10 @@ class User extends Authenticate
     public function photo()
     {
         return $this->morphMany(Photo::class, 'photoable');
+    }
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 
 }

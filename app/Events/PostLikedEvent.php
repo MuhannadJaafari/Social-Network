@@ -23,7 +23,7 @@ public $user,$post,$message,$liker;
     {
         $this->user=$user;
         $this->liker=$liker;
-        $this->message="$liker->name".'liked your post'."$post.text_body";
+        $this->message="$liker->name".'liked your post';
 
     }
 

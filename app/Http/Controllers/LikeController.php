@@ -28,12 +28,13 @@ class LikeController extends Controller
         $like = new Like();
         $like->user_id = auth()->user()->getAuthIdentifier();
         $liked->likes()->save($like);
+        if(!User::find($liked->postable_id)==User::find(auth()->user()->id)){
         if($request->post_id){
             PostLikedEvent::dispatch(User::find($liked->postable_id),$liked,User::find(auth()->user()->getAuthIdentifier()));
         }
         else if($request->comment_id){
             CommentLikedEvent::dispatch(User::find($liked->user_id),$liked,User::find(auth()->user()->getAuthIdentifier()));
-        }
+        }}
     }
 
     /**

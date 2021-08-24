@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hashtag;
-use App\Models\Like;
 use App\Models\Photo;
 use App\Models\Post;
 use App\Models\Users\User;
@@ -12,8 +11,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Carbon;
 
 class PostController extends Controller
 {
@@ -71,21 +68,11 @@ class PostController extends Controller
             $photo = Photo::find($id);
             $photo->delete();
         }
-//        foreach ($request->added_photos as $photourl){
-//            $photo = new Photo();
-//            $photo->url=$photourl;
-//            $post->photos()->save($photo);
-//        }
         $this->storePhotos($request, $post);
         foreach ($request->deleted_videos as $id) {
             $video = Video::find($id);
             $video->delete();
         }
-//        foreach ($request->added_videos as $videourl){
-//            $video=new Video();
-//            $video->url=$videourl;
-//            $post->videos()->save($video);
-//        }
         $this->storeVideos($request, $post);
         $post->save();
     }
