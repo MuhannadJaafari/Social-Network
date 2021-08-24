@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Events\FriendShipCreatedEvent;
+use App\Events\RequestConfirmedEvent;
+use App\Events\RequestSentEvent;
 use App\Models\RelationUser;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
@@ -28,11 +30,13 @@ class RelationController extends Controller
         ]);
     }
 
-    public function getBlockedUsers(){
+    public function getBlockedUsers()
+    {
         $user = User::find(auth()->user()->id);
 
 
     }
+
     public function add(Request $request)
     {
         //todo make request protection for id of user incoming
@@ -42,6 +46,9 @@ class RelationController extends Controller
             return;
         }
         $user->relationUser('user1_id', 'user2_id')->save($user2);
+
+        RequestSentEvent::dispatch(User::find($request->id), User::find(auth()->user()->id));
+        return response('You sent a friend request to ' . $user2->name, 200);
     }
 
     public function accept(Request $request)
@@ -54,7 +61,11 @@ class RelationController extends Controller
         $relation = $relation->pivot;
         $relation->relation = 'friends';
         $relation->save();
-        FriendShipCreatedEvent::dispatch($user,User::find($request->id));
+
+        FriendShipCreatedEvent::dispatch($user, User::find($request->id));
+        RequestConfirmedEvent::dispatch(User::find($request->id), User::find(auth()->user()->getAuthIdentifier()));
+        $user = User::find($request->id)->name;
+        return response('You accepted ' . "$user" . ' friend request', 200);
     }
 
     public function block(Request $request)
@@ -77,6 +88,8 @@ class RelationController extends Controller
         $relation->relation = 'blocked';
         $relation->blocker = $user->id;
         $relation->save();
+        $user = User::find($request->id)->name;
+        return response('You blocked ' . "$user", 200);
     }
 
     public function unblock(Request $request)
@@ -90,6 +103,8 @@ class RelationController extends Controller
             $relation = $user->relationUser('user1_id', 'user2_id')->where('user2_id', $request->id)->first();
         }
         $relation->pivot->delete();
+        $user = User::find($request->id)->name;
+        return response('You unblocked ' . "$user", 200);
     }
 
     public function delete(Request $request)
@@ -128,8 +143,8 @@ class RelationController extends Controller
     public function getFriends()
     {
         $user = User::find(auth()->user()->getAuthIdentifier());
-        $relation1 = $user->relationUser('user2_id', 'user1_id')->where('relation','=','friends');
-        $relation2 = $user->relationUser('user1_id', 'user2_id')->where('relation','=','friends');
+        $relation1 = $user->relationUser('user2_id', 'user1_id')->where('relation', '=', 'friends');
+        $relation2 = $user->relationUser('user1_id', 'user2_id')->where('relation', '=', 'friends');
         return $this->helper->mergeObjects($relation1, $relation2);
 
     }

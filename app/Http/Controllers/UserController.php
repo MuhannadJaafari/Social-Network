@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Helper;
-use App\Http\Requests\UserUpdateRequest;
 use App\Models\Photo;
 use App\Models\RelationUser;
 use App\Models\Users\Address;
@@ -56,9 +55,10 @@ class UserController extends Controller
                 })->first();
 
         }
-        if (!$friendship) $friendship = ['relation' => null];
-        else
+        if (!$friendship || $friendship == 'null') $friendship = ['relation' => 'no_relation'];
+        else {
             $friendship->senderId = $friendship->user1_id;
+        }
         return response()->json([collect($user_page)->merge($friendship)]);
     }
 

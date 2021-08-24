@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentLikedEvent;
+use App\Events\PostLikedEvent;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
@@ -26,6 +28,12 @@ class LikeController extends Controller
         $like = new Like();
         $like->user_id = auth()->user()->getAuthIdentifier();
         $liked->likes()->save($like);
+        if($request->post_id){
+            PostLikedEvent::dispatch(User::find($liked->postable_id),$liked,User::find(auth()->user()->getAuthIdentifier()));
+        }
+        else if($request->comment_id){
+            CommentLikedEvent::dispatch(User::find($liked->user_id),$liked,User::find(auth()->user()->getAuthIdentifier()));
+        }
     }
 
     /**
