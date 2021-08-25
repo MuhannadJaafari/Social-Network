@@ -52,7 +52,7 @@ class HashtagController extends Controller
     {    $hashtag=Hashtag::find($id);
         return response()->json(['name'=>$hashtag->name,
             'post_id'=>$hashtag->post_id,
-            ]);
+        ]);
     }
 
     /**

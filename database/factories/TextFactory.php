@@ -24,7 +24,7 @@ class TextFactory extends Factory
         return [
             'textable_type'=>'App\Models\Post',
             'textable_id'=>'1',
-            'body'=>'Hello there'
+            'body'=>$this->faker->text
         ];
     }
 }

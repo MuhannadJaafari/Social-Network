@@ -40,8 +40,14 @@ class AuthController extends Controller
                 'message' => 'wrong credentials'
             ]);
         }
-        return response()->json(['token' => auth()->user()->createToken('API Token')->plainTextToken
-            ,'id'=>auth()->user()->id]);
+        $token =  auth()->user()->createToken('API Token')->plainTextToken;
+        $user = User::find(auth()->user()->id);
+        return response()->json([
+            'token' => $token,
+            'id'=>auth()->user()->id,
+            'userName'=>$user->name,
+            'profilePic'=>$user->photo()->where('photo_type','=','profile')->where('current','=','1')->first()->url,
+        ]);
     }
     public function logout()
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Events\PostCommentedEvent;
 use App\Models\Comment;
 use App\Models\Hashtag;
+use App\Models\Like;
 use App\Models\Photo;
 use App\Models\Post;
 use App\Models\Users\User;
@@ -31,8 +32,7 @@ class CommentController extends Controller
         $this->storeVideo($request, $comment);
         $this->storeHashtags($request, $comment);
         $user=User::find($post->postable_id);
-        if(!$user==User::find(auth()->user()->id)){
-        PostCommentedEvent::dispatch($user,$post);}
+        PostCommentedEvent::dispatch($user,$post);
     }
 
     /**
@@ -81,10 +81,13 @@ class CommentController extends Controller
     {
         //todo know how $comment->photo works
         $post = Post::findOrFail($request->post_id);
-        $comments = $post->comments()->simplePaginate(10);
+        $comments = $post->comments;
         foreach ($comments as $comment) {
+            $user=User::find($comment->user_id);
             $comment->photo;
             $comment->video;
+            $comment->username = $user->name;
+            $comment->userProfilePic =collect($user->photo()->where('current','=','1')->first())->get('url');
         }
         return $comments;
     }

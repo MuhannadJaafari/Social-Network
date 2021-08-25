@@ -115,9 +115,9 @@ class PageController extends Controller
     }
     public function addPagePost(Request $request)
     {
-     $page=Page::find($request->page_id);
-     $post= new Post();
-     $post->text_body=$request->text_body;
-     $page->posts()->save($post);
+        $page=Page::find($request->page_id);
+        $post= new Post();
+        $post->text_body=$request->text_body;
+        $page->posts()->save($post);
     }
 }

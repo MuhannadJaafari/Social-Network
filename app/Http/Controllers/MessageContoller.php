@@ -63,7 +63,7 @@ class MessageContoller extends Controller
             'sender_id'=>$message->sender_id,
             'text_body'=>$message->text_body,
             'message_id'=>$message->id
-            ]);
+        ]);
     }
 
     /**

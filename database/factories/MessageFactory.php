@@ -22,7 +22,7 @@ class MessageFactory extends Factory
     public function definition()
     {
         return [
-            'text_body'=>'Hi There, I using Whatsapp'
+            'text_body'=>'Hi There, I using SocialNetwork'
         ];
     }
 }

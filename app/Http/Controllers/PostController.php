@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hashtag;
+use App\Models\Like;
 use App\Models\Photo;
 use App\Models\Post;
 use App\Models\Users\User;
@@ -11,6 +12,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 
 class PostController extends Controller
 {
@@ -68,11 +71,21 @@ class PostController extends Controller
             $photo = Photo::find($id);
             $photo->delete();
         }
+//        foreach ($request->added_photos as $photourl){
+//            $photo = new Photo();
+//            $photo->url=$photourl;
+//            $post->photos()->save($photo);
+//        }
         $this->storePhotos($request, $post);
         foreach ($request->deleted_videos as $id) {
             $video = Video::find($id);
             $video->delete();
         }
+//        foreach ($request->added_videos as $videourl){
+//            $video=new Video();
+//            $video->url=$videourl;
+//            $post->videos()->save($video);
+//        }
         $this->storeVideos($request, $post);
         $post->save();
     }
@@ -92,13 +105,21 @@ class PostController extends Controller
     public function getPosts(Request $request)
     {
         $user = User::find($request->user_id);
-        $posts = $user->posts()->simplePaginate(3);
+        $posts = $user->posts;
         foreach ($posts as $post) {
             $post->photos;
             $post->videos;
             $post->hashtags;
+            $profilePhoto =  $user->photo()
+                ->where('photo_type','=','profile')
+                ->where('current','=','1')
+                ->first();
+            $post->userName = $user->name;
+            if($profilePhoto)
+                $post->userProfilePic =$profilePhoto->url;
         }
-        return $posts;
+        return $this->helper->paginate(collect($posts)->sortByDesc('updated_at'), 5, null, ['path' => $request->fullUrl()]);
+
     }
 
     public function getTimeline(Request $request)
@@ -113,9 +134,10 @@ class PostController extends Controller
             foreach ($friend->posts as $post) {
                 $post->photos;
 //                $post->videos;
-                $profilePic = $friend->first()->photo()
+                $profilePic = $friend->photo()
                     ->where('photo_type','=','profile')
                     ->where('current','=','1')->first();
+                $post->userName = $friend->name;
                 if($profilePic){
                     $post->userProfilePic = $profilePic->url;
                 }

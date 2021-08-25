@@ -9,6 +9,7 @@ use App\Models\Like;
 use App\Models\Post;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Array_;
 
 class LikeController extends Controller
 {
@@ -29,12 +30,12 @@ class LikeController extends Controller
         $like->user_id = auth()->user()->getAuthIdentifier();
         $liked->likes()->save($like);
         if(!User::find($liked->postable_id)==User::find(auth()->user()->id)){
-        if($request->post_id){
-            PostLikedEvent::dispatch(User::find($liked->postable_id),$liked,User::find(auth()->user()->getAuthIdentifier()));
-        }
-        else if($request->comment_id){
-            CommentLikedEvent::dispatch(User::find($liked->user_id),$liked,User::find(auth()->user()->getAuthIdentifier()));
-        }}
+            if($request->post_id){
+                PostLikedEvent::dispatch(User::find($liked->postable_id),$liked,User::find(auth()->user()->getAuthIdentifier()));
+            }
+            else if($request->comment_id){
+                CommentLikedEvent::dispatch(User::find($liked->user_id),$liked,User::find(auth()->user()->getAuthIdentifier()));
+            }}
     }
 
     /**
@@ -50,7 +51,7 @@ class LikeController extends Controller
         } else if ($request->comment_id) {
             $deleted = Comment::find($request->comment_id);
         }
-       $like=$deleted->likes()->where('user_id', '=', auth()->user()->getAuthIdentifier())->first();
+        $like=$deleted->likes()->where('user_id', '=', auth()->user()->getAuthIdentifier())->first();
         $like->delete();
     }
 
@@ -61,6 +62,14 @@ class LikeController extends Controller
         } else if ($request->comment_id) {
             $liked = Comment::findOrFail($request->comment_id);
         }
-        return $liked->likes()->simplePaginate(10);
+        $liker=$liked->likes->where('user_id','=',auth()->user()->getAuthIdentifier())->first();
+        if($liker){
+            $iliked=true;
+        }
+        else {$iliked=false;}
+        $arr=new Array_();
+        $arr->likes=Like::where('likeable_id','=',$liked->id)->count();
+        $arr->liked=$iliked;
+        return response()->json($arr);
     }
 }
